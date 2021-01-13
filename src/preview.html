@@ -145,7 +145,7 @@
                                 preview.load(beatmapID, bgURL, osuURL, function () {
                                     audio.src = audiofile;
                                     $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
-                                    .text(this.beatmap.toString());
+                                        .text(this.beatmap.toString());
                                     if (self.beatmap instanceof Mania) {
                                         $('#mania').addClass('e');
                                         $('#scroll').text(self.beatmap.scrollSpeed);
