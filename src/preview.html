@@ -121,7 +121,6 @@
                 let data = await fetch("https://hentai.ninja/api/b/" + beatmapID)
                     .then((response) => response.json())
                     .then(data => {
-                        //console.log(data);
                         setID = data.ParentSetID;
                         var audiofile = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
                         var bgURL = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
@@ -131,34 +130,26 @@
                             if (this.readyState == 4 && this.status == 200) {
                                 sayobotdata = JSON.parse(sayobotcall.responseText);
                                 if (sayobotdata.data.length == 1) {
-                                    console.log("hi");
                                     audiofile += sayobotdata.data[0].audio;
                                     bgURL += sayobotdata.data[0].BG;
                                     osuURL += sayobotdata.data[0].file_name;
-                                    console.log(osuURL);
                                 }
                                 for (map in sayobotdata.data) {
                                     if (sayobotdata.data[map].beatmapID == beatmapID) {
-                                        console.log("hi");
                                         audiofile += sayobotdata.data[map].audio;
                                         bgURL += sayobotdata.data[map].BG;
                                         osuURL += sayobotdata.data[map].file_name;
-                                        console.log(osuURL);
                                         break;
                                     }
                                 }
                                 preview.load(beatmapID, bgURL, osuURL, function () {
-
                                     audio.src = audiofile;
-
                                     $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
                                     .text(this.beatmap.toString());
-
                                     if (self.beatmap instanceof Mania) {
                                         $('#mania').addClass('e');
                                         $('#scroll').text(self.beatmap.scrollSpeed);
                                     }
-
                                     $('#play').addClass('e');
                                 }, function (e) {
                                     alert(e);
