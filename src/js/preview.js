@@ -10,6 +10,7 @@ function Preview(dest)
 
     var self = this;
     this.background = new Image();
+    this.background.setAttribute('crossOrigin', 'anonymous');
     this.background.addEventListener('load', function()
     {
         if (!/^http/i.test(this.src))
@@ -49,7 +50,7 @@ function Preview(dest)
         self.container.style.backgroundImage = 'none';
     });
 }
-Preview.prototype.load = function(beatmapID, success, fail)
+Preview.prototype.load = function(beatmapID, bgURL, success, fail)
 {
     if (typeof this.xhr != 'undefined')
     {
@@ -63,7 +64,8 @@ Preview.prototype.load = function(beatmapID, success, fail)
         try
         {
             self.beatmap = Beatmap.parse(this.responseText);
-            self.background.src = 'i/' + beatmapID;
+            //console.log(bgURL);
+            self.background.src = bgURL;
             self.ctx.restore();
             self.ctx.save();
             self.beatmap.update(self.ctx);
@@ -82,8 +84,8 @@ Preview.prototype.load = function(beatmapID, success, fail)
             }
         }
     });
-    this.xhr.open('GET', 'b/' + beatmapID);
-    this.xhr.send();
+    self.xhr.open('GET', 'https://osu.ppy.sh/osu/' + beatmapID);
+    self.xhr.send();
 };
 Preview.prototype.at = function(time)
 {
