@@ -50,7 +50,7 @@ function Preview(dest)
         self.container.style.backgroundImage = 'none';
     });
 }
-Preview.prototype.load = function(beatmapID, bgURL, success, fail)
+Preview.prototype.load = function(beatmapID, bgURL, osuURL, success, fail)
 {
     if (typeof this.xhr != 'undefined')
     {
@@ -84,7 +84,7 @@ Preview.prototype.load = function(beatmapID, bgURL, success, fail)
             }
         }
     });
-    self.xhr.open('GET', 'https://osu.ppy.sh/osu/' + beatmapID);
+    self.xhr.open('GET', osuURL);
     self.xhr.send();
 };
 Preview.prototype.at = function(time)
