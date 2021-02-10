@@ -3,9 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self' https: blob: data:; img-src 'self' https: data: blob:; style-src 'self' http://* 'unsafe-inline'; script-src 'self' * 'unsafe-inline' 'unsafe-eval' " />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="nofollow, noindex, noarchive">
     <meta name="creator" content="https://github.com/sunghwan2789/osu-preview">
     <title>jmir.xyz - osu!preview</title>
@@ -85,7 +82,7 @@
 
             $('#play').removeClass('e');
 
-            var beatmapID = location.href.split('#')[1];
+            var beatmapID = isNaN(location.hash.split('#')[1]) ? 75 : location.hash.split('#')[1];
             var setID;
             var beatmapsetdata;
             var osufiledata;
@@ -94,7 +91,6 @@
                 let data = await fetch("https://api.chimu.moe/v1/map/" + beatmapID)
                     .then((response) => response.json())
                     .then(data => {
-                        console.log(data);
                         setID = data.data.ParentSetId;
                         var audiofile = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
                         var bgURL = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
@@ -226,17 +222,4 @@
         });
 
     </script>
-    <script>
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date(); a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', 'UA-21956094-2', 'auto');
-        ga('send', 'pageview');
-
-    </script>
-
 </html>
