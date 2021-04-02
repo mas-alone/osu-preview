@@ -116,7 +116,6 @@
                                 // writer
                                 new zip.TextWriter()
                             );
-                            console.log("found osu file");
                             osufile = text;
                             let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                             if (bgmatch) {
@@ -131,7 +130,6 @@
                         }
                     }
                     if (!found) {
-                        console.log("lol")
                         for (entry in entries) {
                             console.log(entries[entry].filename.replace(/[^\x00-\x7F]/g, " "), osufilename.replace(/[^\x00-\x7F]/g, ""))
                             let match1 = entries[entry].filename.match(/(?<=\[).+/);
@@ -157,8 +155,10 @@
                         }
                     }
                     //make bg blob
+                    let bgfound = false;
                     for (entry in entries) {
                         if (entries[entry].filename === bgfilename) {
+                            bgfound = true;
                             let extension = bgfilename.split(".").pop();
                             let bgblob2 = await entries[entry].getData(
                                 // writer
@@ -168,9 +168,25 @@
                             console.log(bgblob);
                         }
                     }
+                    if (!bgfound) {
+                        for (entry in entries) {
+                            if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === bgfilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
+                            bgfound = true;
+                            let extension = bgfilename.split(".").pop();
+                            let bgblob2 = await entries[entry].getData(
+                                // writer
+                                new zip.BlobWriter("audio/" + extension)
+                            );
+                            bgblob = URL.createObjectURL(bgblob2);
+                            console.log(bgblob);
+                        }
+                        }
+                    }
                     //make audio blob
+                    let audiofound = false;
                     for (entry in entries) {
                         if (entries[entry].filename === audiofilename) {
+                            audiofound = true;
                             let extension = audiofilename.split(".").pop();
                             let audioblob2 = await entries[entry].getData(
                                 // writer
@@ -178,6 +194,20 @@
                             );
                             audioblob = URL.createObjectURL(audioblob2);
                             console.log(audioblob);
+                        }
+                    }
+                    if (!audiofound) {
+                        for (entry in entries) {
+                            if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === audiofilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
+                            audiofound = true;
+                            let extension = audiofilename.split(".").pop();
+                            let audioblob2 = await entries[entry].getData(
+                                // writer
+                                new zip.BlobWriter("audio/" + extension)
+                            );
+                            audioblob = URL.createObjectURL(audioblob2);
+                            console.log(audioblob);
+                        }
                         }
                     }
                 }
