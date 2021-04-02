@@ -33,9 +33,9 @@
         <img src="/_data/BloodCat.svg" width="20" height="30" alt="아까네코 종이모형">
         <a href="//osu.ppy.sh/b/" target="_blank">-</a>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-    
+
     <script src="js/util.js"></script>
 
     <script src="js/beatmap/beatmap.js"></script>
@@ -66,6 +66,7 @@
     <script src="js/mania/hitnote.js"></script>
     <script src="js/mania/holdnote.js"></script>
 
+    <script type="text/javascript" src="zip.js/dist/zip.min.js"></script>
     <script src="js/preview.js"></script>
     <script src="js/viewbox.js"></script>
 
@@ -83,55 +84,92 @@
 
             var beatmapID = isNaN(location.hash.split('#')[1]) ? 75 : location.hash.split('#')[1];
             var setID;
-            var beatmapsetdata;
-            var osufiledata;
+            var osufilename;
+            var audiofilename;
+            var audioblob;
+            var bgfilename;
+            var bgblob;
+            var osufile;
             !async function () {
                 var self = this;
-                let data = await fetch("https://api.chimu.moe/v1/map/" + beatmapID)
-                    .then((response) => response.json())
-                    .then(data => {
-                        setID = data.data.ParentSetId;
-                        var audiofile = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
-                        var bgURL = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
-                        var osuURL = 'https://dl.sayobot.cn/beatmaps/files/' + setID + '/';
-                        var sayobotcall = new XMLHttpRequest();
-                        sayobotcall.onreadystatechange = function () {
-                            if (this.readyState == 4 && this.status == 200) {
-                                sayobotdata = JSON.parse(sayobotcall.responseText);
-                                if (sayobotdata.data.length == 1) {
-                                    audiofile += sayobotdata.data[0].audio;
-                                    bgURL += sayobotdata.data[0].BG;
-                                    osuURL += sayobotdata.data[0].file_name;
-                                }
-                                for (map in sayobotdata.data) {
-                                    if (sayobotdata.data[map].beatmapID == beatmapID) {
-                                        audiofile += sayobotdata.data[map].audio;
-                                        bgURL += sayobotdata.data[map].BG;
-                                        osuURL += sayobotdata.data[map].file_name;
-                                        break;
-                                    }
-                                }
-                                preview.load(beatmapID, bgURL, osuURL, function () {
-                                    audio.src = audiofile;
-                                    $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
-                                        .text(this.beatmap.toString());
-                                    if (self.beatmap instanceof Mania) {
-                                        $('#mania').addClass('e');
-                                        $('#scroll').text(self.beatmap.scrollSpeed);
-                                    }
-                                    $('#play').addClass('e');
-                                }, function (e) {
-                                    alert(e);
-                                    console.log(e);
-                                });
+                const response = await fetch("https://api.chimu.moe/v1/map/" + beatmapID);
+                const data = await response.json();
+                console.log(data.data);
+                setID = data.data.ParentSetId;
+                osufilename = data.data.OsuFile;
+                const zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
+                const responseblabla = await fetch("https://api.chimu.moe/v1/download/" + setID + "?n")
+                var blob = await responseblabla.blob();
+                console.log(blob);
+                console.log(URL.createObjectURL(blob));
+                const reader = new zip.ZipReader(new zip.BlobReader(blob));
+                // get all entries from the zip
+                const entries = await reader.getEntries();
+                if (entries.length) {
+                    console.log(entries);
+                    // get bg filename
+                    for (entry in entries) {
+                        if (entries[entry].filename === osufilename) {
+                            let text = await entries[entry].getData(
+                                // writer
+                                new zip.TextWriter()
+                            );
+                            osufile = text;
+                            let bgmatch = text.match(/(?<=0,0,").+(?=")/);
+                            if (bgmatch) {
+                                bgfilename = bgmatch[0];
+                                console.log(bgfilename);
                             }
-                        };
-                        sayobotcall.open("GET", "https://dl.sayobot.cn/beatmaps/info/" + setID + "/", true)
-                        sayobotcall.send();
-                        return data.ParentSetID;
-                    }).catch(error => {
-                        console.error(error);
-                    });
+                            let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
+                            if (audiomatch) {
+                                audiofilename = audiomatch[0];
+                                console.log(audiofilename);
+                            }
+                        }
+                    }
+                    //make bg blob
+                    for (entry in entries) {
+                        if (entries[entry].filename === bgfilename) {
+                            let extension = bgfilename.split(".").pop();
+                            let bgblob2 = await entries[entry].getData(
+                                // writer
+                                new zip.BlobWriter("image/" + extension)
+                            );
+                            bgblob = URL.createObjectURL(bgblob2);
+                            console.log(bgblob);
+                        }
+                    }
+                    //make audio blob
+                    for (entry in entries) {
+                        if (entries[entry].filename === audiofilename) {
+                            let extension = audiofilename.split(".").pop();
+                            let audioblob2 = await entries[entry].getData(
+                                // writer
+                                new zip.BlobWriter("audio/" + extension)
+                            );
+                            audioblob = URL.createObjectURL(audioblob2);
+                            console.log(audioblob);
+                        }
+                    }
+                }
+                // close the ZipReader
+                await reader.close();
+
+                preview.load(bgblob, osufile, function () {
+                    audio.src = audioblob;
+                    $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
+                        .text(this.beatmap.toString());
+                    if (self.beatmap instanceof Mania) {
+                        $('#mania').addClass('e');
+                        $('#scroll').text(self.beatmap.scrollSpeed);
+                    }
+                    $('#play').addClass('e');
+                }, function (e) {
+                    alert(e);
+                    console.log(e);
+                });
+
+
             }();
         }).trigger('hashchange');
 
@@ -221,4 +259,5 @@
         });
 
     </script>
+
 </html>

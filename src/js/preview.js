@@ -1,3 +1,4 @@
+var bgblob;
 function Preview(dest) {
     this.container = dest;
 
@@ -11,11 +12,10 @@ function Preview(dest) {
     this.background = new Image();
     this.background.setAttribute('crossOrigin', 'anonymous');
     this.background.addEventListener('load', function () {
-        if (!/^http/i.test(this.src)) {
-            return;
-        }
+        
 
         var canvas = document.createElement('canvas');
+        canvas.id = 'bgcanvas';
         canvas.width = self.screen.width;
         canvas.height = self.screen.height;
         var ctx = canvas.getContext('2d');
@@ -31,30 +31,21 @@ function Preview(dest) {
         if (typeof self.beatmap.processBG != 'undefined') {
             self.beatmap.processBG(ctx);
         }
-
-        canvas.toBlob(function (blob) {
-            var url = URL.createObjectURL(blob);
-            self.background.src = url;
-            self.container.style.backgroundImage = 'url(' + url + ')';
-            // mandatory?
-            // URL.revokeObjectURL(url);
-        });
+        self.container.style.backgroundImage = 'url(' + self.background.src + ')';
     });
     this.background.addEventListener('error', function () {
         self.container.style.backgroundImage = 'none';
     });
 }
-Preview.prototype.load = function (beatmapID, bgURL, osuURL, success, fail) {
+Preview.prototype.load = function (bgblob, osufile, success, fail) {
     if (typeof this.xhr != 'undefined') {
         this.xhr.abort();
     }
 
     var self = this;
-    this.xhr = new XMLHttpRequest();
-    this.xhr.addEventListener('load', function () {
-        try {
-            self.beatmap = Beatmap.parse(this.responseText);
-            self.background.src = bgURL;
+    try {
+            self.beatmap = Beatmap.parse(osufile);
+            self.background.src = bgblob;
             self.ctx.restore();
             self.ctx.save();
             self.beatmap.update(self.ctx);
@@ -69,9 +60,6 @@ Preview.prototype.load = function (beatmapID, bgURL, osuURL, success, fail) {
                 fail.call(self, e);
             }
         }
-    });
-    self.xhr.open('GET', osuURL);
-    self.xhr.send();
 };
 Preview.prototype.at = function (time) {
     this.ctx.save();
