@@ -31,7 +31,7 @@
     </div>
     <div id="title">
         <img src="/_data/BloodCat.svg" width="20" height="30" alt="아까네코 종이모형">
-        <a target="_blank">Loading or beatmap not found.</a>
+        <a target="_blank">Loading...</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
@@ -98,7 +98,14 @@
                 setID = data.data.ParentSetId;
                 osufilename = data.data.OsuFile;
                 const zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
-                const responseblabla = await fetch("https://api.chimu.moe/v1/download/" + setID + "?n")
+                var responseblabla;
+                await fetch("https://api.chimu.moe/v1/download/" + setID + "?n").then((response) => {
+                    if (response.status >= 400 && response.status < 600) {
+                        $('#title a').text("beatmap not found on mirror, sorry");
+                    } else {
+                        responseblabla = response;
+                    }
+                })
                 var blob = await responseblabla.blob();
                 console.log(blob);
                 console.log(URL.createObjectURL(blob));
