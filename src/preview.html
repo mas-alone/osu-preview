@@ -107,8 +107,7 @@
                     }
                 })
                 var blob = await responseblabla.blob();
-                console.log(blob);
-                console.log(URL.createObjectURL(blob));
+                console.log("osu zip file: " + URL.createObjectURL(blob));
                 const reader = new zip.ZipReader(new zip.BlobReader(blob));
                 // get all entries from the zip
                 const entries = await reader.getEntries();
@@ -124,8 +123,10 @@
                                 new zip.TextWriter()
                             );
                             osufile = text;
+                            console.log(text);
                             let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                             if (bgmatch) {
+                                console.log("yay")
                                 bgfilename = bgmatch[0];
                                 console.log(bgfilename);
                             }
@@ -146,6 +147,7 @@
                                     new zip.TextWriter()
                                 );
                                 osufile = text;
+                                console.log(text);
                                 let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                                 if (bgmatch) {
                                     bgfilename = bgmatch[0];
@@ -160,78 +162,84 @@
                         }
                     }
                     //make bg blob
-                    let bgfound = false;
-                    for (entry in entries) {
-                        if (entries[entry].filename === bgfilename) {
-                            bgfound = true;
-                            let extension = bgfilename.split(".").pop();
-                            let bgblob2 = await entries[entry].getData(
-                                // writer
-                                new zip.BlobWriter("image/" + extension)
-                            );
-                            bgblob = URL.createObjectURL(bgblob2);
-                            console.log(bgblob);
-                        }
-                    }
-                    if (!bgfound) {
+                    if (bgfilename) {
+                        let bgfound = false;
                         for (entry in entries) {
-                            if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === bgfilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
-                            bgfound = true;
-                            let extension = bgfilename.split(".").pop();
-                            let bgblob2 = await entries[entry].getData(
-                                // writer
-                                new zip.BlobWriter("audio/" + extension)
-                            );
-                            bgblob = URL.createObjectURL(bgblob2);
-                            console.log(bgblob);
+                            if (entries[entry].filename === bgfilename) {
+                                bgfound = true;
+                                let extension = bgfilename.split(".").pop();
+                                let bgblob2 = await entries[entry].getData(
+                                    // writer
+                                    new zip.BlobWriter("image/" + extension)
+                                );
+                                bgblob = URL.createObjectURL(bgblob2);
+                                console.log(bgblob);
+                            }
                         }
+                        if (!bgfound) {
+                            for (entry in entries) {
+                                if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === bgfilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
+                                    bgfound = true;
+                                    let extension = bgfilename.split(".").pop();
+                                    let bgblob2 = await entries[entry].getData(
+                                        // writer
+                                        new zip.BlobWriter("audio/" + extension)
+                                    );
+                                    bgblob = URL.createObjectURL(bgblob2);
+                                    console.log(bgblob);
+                                }
+                            }
                         }
                     }
                     //make audio blob
-                    let audiofound = false;
-                    for (entry in entries) {
-                        if (entries[entry].filename === audiofilename) {
-                            audiofound = true;
-                            let extension = audiofilename.split(".").pop();
-                            let audioblob2 = await entries[entry].getData(
-                                // writer
-                                new zip.BlobWriter("audio/" + extension)
-                            );
-                            audioblob = URL.createObjectURL(audioblob2);
-                            console.log(audioblob);
-                        }
-                    }
-                    if (!audiofound) {
+                    if (audiofilename) {
+                        let audiofound = false;
                         for (entry in entries) {
-                            if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === audiofilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
-                            audiofound = true;
-                            let extension = audiofilename.split(".").pop();
-                            let audioblob2 = await entries[entry].getData(
-                                // writer
-                                new zip.BlobWriter("audio/" + extension)
-                            );
-                            audioblob = URL.createObjectURL(audioblob2);
-                            console.log(audioblob);
+                            if (entries[entry].filename === audiofilename) {
+                                audiofound = true;
+                                let extension = audiofilename.split(".").pop();
+                                let audioblob2 = await entries[entry].getData(
+                                    // writer
+                                    new zip.BlobWriter("audio/" + extension)
+                                );
+                                audioblob = URL.createObjectURL(audioblob2);
+                                console.log(audioblob);
+                            }
                         }
+                        if (!audiofound) {
+                            for (entry in entries) {
+                                if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === audiofilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
+                                audiofound = true;
+                                let extension = audiofilename.split(".").pop();
+                                let audioblob2 = await entries[entry].getData(
+                                    // writer
+                                    new zip.BlobWriter("audio/" + extension)
+                                );
+                                audioblob = URL.createObjectURL(audioblob2);
+                                console.log("audio: " + audioblob);
+                            }
+                            }
                         }
                     }
                 }
                 // close the ZipReader
                 await reader.close();
 
-                preview.load(bgblob, osufile, function () {
-                    audio.src = audioblob;
-                    $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
-                        .text(this.beatmap.toString());
-                    if (self.beatmap instanceof Mania) {
-                        $('#mania').addClass('e');
-                        $('#scroll').text(self.beatmap.scrollSpeed);
-                    }
-                    $('#play').addClass('e');
-                }, function (e) {
-                    alert(e);
-                    console.log(e);
-                });
+                if(bgblob && osufile) {
+                    preview.load(bgblob, osufile, function () {
+                        audio.src = audioblob;
+                        $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
+                            .text(this.beatmap.toString());
+                        if (self.beatmap instanceof Mania) {
+                            $('#mania').addClass('e');
+                            $('#scroll').text(self.beatmap.scrollSpeed);
+                        }
+                        $('#play').addClass('e');
+                    }, function (e) {
+                        alert(e);
+                        console.log(e);
+                    });
+                } else $('#title a').text("an error has occurred, sorry!");
 
 
             }();
