@@ -98,15 +98,13 @@
                 setID = data.ParentSetId;
                 osufilename = data.OsuFile;
                 const zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
-                var responseblabla;
-                await fetch("https://chimu.moe/" + data.DownloadPath + "?n").then((response) => {
-                    if (response.status >= 400 && response.status < 600) {
-                        $('#title a').text("beatmap not found on mirror, sorry");
-                    } else {
-                        responseblabla = response;
-                    }
-                })
-                var blob = await responseblabla.blob();
+                var response2 = await fetch("https://chimu.moe/" + data.DownloadPath + "?n");
+                
+                if (response2.status >= 400 && response2.status < 600) {
+                    $('#title a').text("beatmap not found on mirror, sorry");
+                    return;
+                }
+                var blob = await response2.blob();
                 console.log("osu zip file: " + URL.createObjectURL(blob));
                 const reader = new zip.ZipReader(new zip.BlobReader(blob));
                 // get all entries from the zip
