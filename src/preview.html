@@ -82,7 +82,7 @@
 
             $('#play').removeClass('e');
 
-            var beatmapID = isNaN(location.hash.split('#')[1]) ? 75 : location.hash.split('#')[1];
+            var beatmapID = isNaN(location.search.split('?beatmapId=')[1]) ? 75 : location.search.split('?beatmapId=')[1];
             var setID;
             var osufilename;
             var audiofilename;
