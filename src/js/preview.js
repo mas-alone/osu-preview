@@ -1,5 +1,5 @@
-function Preview(dest)
-{
+var bgblob;
+function Preview(dest) {
     this.container = dest;
 
     this.screen = document.createElement('canvas');
@@ -10,14 +10,12 @@ function Preview(dest)
 
     var self = this;
     this.background = new Image();
-    this.background.addEventListener('load', function()
-    {
-        if (!/^http/i.test(this.src))
-        {
-            return;
-        }
+    this.background.setAttribute('crossOrigin', 'anonymous');
+    this.background.addEventListener('load', function () {
+        
 
         var canvas = document.createElement('canvas');
+        canvas.id = 'bgcanvas';
         canvas.width = self.screen.width;
         canvas.height = self.screen.height;
         var ctx = canvas.getContext('2d');
@@ -30,63 +28,40 @@ function Preview(dest)
         ctx.fillStyle = 'rgba(0, 0, 0, .4)';
         ctx.fillRect(0, 0, self.screen.width, self.screen.height);
 
-        if (typeof self.beatmap.processBG != 'undefined')
-        {
+        if (typeof self.beatmap.processBG != 'undefined') {
             self.beatmap.processBG(ctx);
         }
-
-        canvas.toBlob(function(blob)
-        {
-            var url = URL.createObjectURL(blob);
-            self.background.src = url;
-            self.container.style.backgroundImage = 'url(' + url + ')';
-            // mandatory?
-            // URL.revokeObjectURL(url);
-        });
+        self.container.style.backgroundImage = 'url(' + self.background.src + ')';
     });
-    this.background.addEventListener('error', function()
-    {
+    this.background.addEventListener('error', function () {
         self.container.style.backgroundImage = 'none';
     });
 }
-Preview.prototype.load = function(beatmapID, success, fail)
-{
-    if (typeof this.xhr != 'undefined')
-    {
+Preview.prototype.load = function (bgblob, osufile, success, fail) {
+    if (typeof this.xhr != 'undefined') {
         this.xhr.abort();
     }
 
     var self = this;
-    this.xhr = new XMLHttpRequest();
-    this.xhr.addEventListener('load', function()
-    {
-        try
-        {
-            self.beatmap = Beatmap.parse(this.responseText);
-            self.background.src = 'i/' + beatmapID;
+    try {
+            self.beatmap = Beatmap.parse(osufile);
+            self.background.src = bgblob;
             self.ctx.restore();
             self.ctx.save();
             self.beatmap.update(self.ctx);
             self.at(0);
 
-            if (typeof success == 'function')
-            {
+            if (typeof success == 'function') {
                 success.call(self);
             }
         }
-        catch (e)
-        {
-            if (typeof fail == 'function')
-            {
+        catch (e) {
+            if (typeof fail == 'function') {
                 fail.call(self, e);
             }
         }
-    });
-    this.xhr.open('GET', 'b/' + beatmapID);
-    this.xhr.send();
 };
-Preview.prototype.at = function(time)
-{
+Preview.prototype.at = function (time) {
     this.ctx.save();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, Beatmap.WIDTH, Beatmap.HEIGHT);
