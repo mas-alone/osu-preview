@@ -11,23 +11,23 @@ gulp.task('html', function () {
             inlinecss: [cssnano()]
         }))
         .pipe(strip())
-        .pipe(gulp.dest('doc/'));
+        .pipe(gulp.dest('docs/'));
 });
 
 
 gulp.task('js', function () {
     return gulp.src('src/**/*.js')
         .pipe(uglify())
-        .pipe(gulp.dest('doc'));
+        .pipe(gulp.dest('docs'));
 });
 
 gulp.task('css', function () {
     return gulp.src('src/**/*.css')
         .pipe(cssnano())
-        .pipe(gulp.dest('doc'));
+        .pipe(gulp.dest('docs'));
 });
 
 gulp.task('images', function () {
     return gulp.src('src/**/*.svg')
-        .pipe(gulp.dest('doc'));
+        .pipe(gulp.dest('docs'));
 });
