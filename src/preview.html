@@ -125,7 +125,7 @@
                     // get bg filename
                     var found = false;
                     for (entry in entries) {
-                        if (entries[entry].filename === osufilename) {
+                        if (entries[entry].filename.toLowerCase() === osufilename.toLowerCase()) {
                             found = true;
                             let text = await entries[entry].getData(
                                 // writer
@@ -150,7 +150,7 @@
                         for (entry in entries) {
                             let string1 = entries[entry].filename.replace(/[^a-zA-Z]/g, "");
                             let string2 = osufilename.replace(/[^a-zA-Z]/g, "");
-                            if (string1 === string2) {
+                            if (string1.toLowerCase() === string2.toLowerCase()) {
                                 let text = await entries[entry].getData(
                                     // writer
                                     new zip.TextWriter()
@@ -174,7 +174,7 @@
                     if (bgfilename) {
                         let bgfound = false;
                         for (entry in entries) {
-                            if (entries[entry].filename === bgfilename) {
+                            if (entries[entry].filename.toLowerCase() === bgfilename.toLowerCase()) {
                                 bgfound = true;
                                 let extension = bgfilename.split(".").pop();
                                 let bgblob2 = await entries[entry].getData(
@@ -204,7 +204,7 @@
                     if (audiofilename) {
                         let audiofound = false;
                         for (entry in entries) {
-                            if (entries[entry].filename === audiofilename) {
+                            if (entries[entry].filename.toLowerCase() === audiofilename.toLowerCase()) {
                                 audiofound = true;
                                 let extension = audiofilename.split(".").pop();
                                 let audioblob2 = await entries[entry].getData(
