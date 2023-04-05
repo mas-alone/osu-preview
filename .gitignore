@@ -3,5 +3,3 @@
 !.gitignore
 !gulpfile.js
 !package.json
-!/src/zip.js
-!/src/js
