@@ -102,12 +102,15 @@
                 //osufilename = data.OsuFile;
                 const artist = sayoData.artist;
                 const title = sayoData.title;
-                osufilename = artist + " - " + title + " (" + sayoData.creator + ") [" + sayoData.bid_data[0].version + "].osu";
+                //search version
+                let diffIndex = sayoData.bid_data.findIndex((biddata) => biddata.bid.toString() === beatmapID);
+                if (diffIndex < 0) diffIndex = 0;
+                osufilename = artist + " - " + title + " (" + sayoData.creator + ") [" + sayoData.bid_data[diffIndex].version + "].osu";
                 console.log("osufilename:" + osufilename);
                 const zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
                 //var response2 = await fetch("https://chimu.moe" + data.DownloadPath);
                 var response2 = await fetch(`https://txy1.sayobot.cn/beatmaps/download/mini/${setID}?server=auto`);
-                
+
                 if (response2.status >= 400 && response2.status < 600) {
                     $('#title a').text("beatmap not found on mirror, sorry");
                     return;
@@ -215,15 +218,15 @@
                         if (!audiofound) {
                             for (entry in entries) {
                                 if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === audiofilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
-                                audiofound = true;
-                                let extension = audiofilename.split(".").pop();
-                                let audioblob2 = await entries[entry].getData(
-                                    // writer
-                                    new zip.BlobWriter("audio/" + extension)
-                                );
-                                audioblob = URL.createObjectURL(audioblob2);
-                                console.log("audio: " + audioblob);
-                            }
+                                    audiofound = true;
+                                    let extension = audiofilename.split(".").pop();
+                                    let audioblob2 = await entries[entry].getData(
+                                        // writer
+                                        new zip.BlobWriter("audio/" + extension)
+                                    );
+                                    audioblob = URL.createObjectURL(audioblob2);
+                                    console.log("audio: " + audioblob);
+                                }
                             }
                         }
                     }
@@ -231,7 +234,7 @@
                 // close the ZipReader
                 await reader.close();
 
-                if(bgblob && osufile) {
+                if (bgblob && osufile) {
                     preview.load(bgblob, osufile, function () {
                         audio.src = audioblob;
                         $('#title a').prop('href', '//osu.ppy.sh/b/' + beatmapID)
