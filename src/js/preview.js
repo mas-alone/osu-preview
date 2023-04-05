@@ -31,7 +31,7 @@ function Preview(dest) {
         if (typeof self.beatmap.processBG != 'undefined') {
             self.beatmap.processBG(ctx);
         }
-        self.container.style.backgroundImage = 'url(' + self.background.src + ')';
+        self.container.style.backgroundImage = 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + self.background.src + ')';
     });
     this.background.addEventListener('error', function () {
         self.container.style.backgroundImage = 'none';
