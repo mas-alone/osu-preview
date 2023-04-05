@@ -1,1 +1,0 @@
-function Curve(){this.startAngle=this.path[0].angleTo(this.path[1]);var e=this.path.slice(-2);this.endAngle=e[1].angleTo(e[0])}Curve.prototype.path=void 0,Curve.prototype.pointAt=void 0,Curve.PRECISION=5,Curve.parse=function(e,t,r){try{if("P"==e)return new CircumscribedCircle(t,r);if("C"==e)return new CatmullCurve(t,r)}catch(e){}return new LinearBezier(t,r,"L"==e)};

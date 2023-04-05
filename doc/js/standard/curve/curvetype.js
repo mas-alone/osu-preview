@@ -1,1 +1,0 @@
-function CurveType(t){var i=1+(t/4|0);this.path=[];for(var h=0;h<=i;h++)this.path[h]=this.pointAt(h/i);this.distance=[0];for(h=1;h<=i;h++)this.distance[h]=this.path[h].distanceTo(this.path[h-1])}CurveType.prototype.pointAt=void 0;
