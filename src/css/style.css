@@ -1,7 +1,9 @@
-html, body {
+html,
+body {
     height: 100%;
     overflow: hidden;
 }
+
 body {
     margin: 0;
     background: #000;
@@ -19,19 +21,28 @@ button {
     height: 40px;
     font: 14px sans-serif;
 }
+
 button::-moz-focus-inner {
     padding: 0;
     border: 0;
 }
 
-body > * {
+body>* {
     position: fixed;
 }
-#speed, #control, #title, #mania {
+
+#speed,
+#control,
+#title,
+#mania {
     background: rgba(0, 0, 0, .6);
     display: none;
 }
-body.h #speed, body.h #control, body.h #title, body.h #mania.e {
+
+body.h #speed,
+body.h #control,
+body.h #title,
+body.h #mania.e {
     display: block;
 }
 
@@ -53,6 +64,7 @@ body.h #speed, body.h #control, body.h #title, body.h #mania.e {
     text-shadow: 0 0 .05em #000;
     opacity: 0;
 }
+
 #play.e {
     opacity: .6;
 }
@@ -63,9 +75,10 @@ body.h #speed, body.h #control, body.h #title, body.h #mania.e {
     transform: translateY(-50%);
     width: 40px;
 }
-    #speed button:not(.e) {
-        color: #666;
-    }
+
+#speed button:not(.e) {
+    color: #666;
+}
 
 #mania {
     top: 50%;
@@ -79,18 +92,30 @@ body.h #speed, body.h #control, body.h #title, body.h #mania.e {
     left: 0;
     width: 100%;
 }
-    input {
-        margin: 4px;
-        padding: 0;
-        height: 32px;
-        box-sizing: border-box;
-    }
-    #progress {
-        width: calc(100% - 156px);
-    }
-    #volume {
-        width: 100px;
-    }
+
+input {
+    margin: 4px;
+    padding: 0;
+    height: 32px;
+    box-sizing: border-box;
+}
+
+#playtime {
+    margin: 4px;
+    vertical-align: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    color: white;
+    font-size: 12px;
+}
+
+#progress {
+    width: calc(100% - 206px);
+}
+
+#volume {
+    width: 100px;
+}
 
 #title {
     top: 0;
@@ -98,27 +123,31 @@ body.h #speed, body.h #control, body.h #title, body.h #mania.e {
     width: 100%;
     white-space: nowrap;
 }
-    img {
-        vertical-align: middle;
-        position: relative;
-        border: 0;
-        top: -1px;
-        padding: 0 10px;
-    }
-    a {
-        font: 14px/40px sans-serif;
-        border-bottom: 1px dashed transparent;
-        color: #fff;
-        text-decoration: none;
-    }
-    a:hover {
-        border-bottom-color: #ddd;
-    }
-    #share {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
+
+img {
+    vertical-align: middle;
+    position: relative;
+    border: 0;
+    top: -1px;
+    padding: 0 10px;
+}
+
+a {
+    font: 14px/40px sans-serif;
+    border-bottom: 1px dashed transparent;
+    color: #fff;
+    text-decoration: none;
+}
+
+a:hover {
+    border-bottom-color: #ddd;
+}
+
+#share {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
 
 #sharePrompt {
     top: 50%;
@@ -127,14 +156,16 @@ body.h #speed, body.h #control, body.h #title, body.h #mania.e {
     background: rgba(255, 255, 255, .6);
     display: none;
 }
-    #sharePrompt button {
-        float: right;
-        background: #49f;
-    }
-    #sharePrompt input {
-        width: 100%;
-        margin: 0;
-    }
+
+#sharePrompt button {
+    float: right;
+    background: #49f;
+}
+
+#sharePrompt input {
+    width: 100%;
+    margin: 0;
+}
 
 #fullscreen {
     position: absolute;

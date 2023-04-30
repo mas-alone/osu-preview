@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="nofollow, noindex, noarchive">
     <meta name="creator" content="https://github.com/sunghwan2789/osu-preview">
-    <title>jmir.ml - osu!preview</title>
+    <title>osu!preview (Modified from jmir.ml)</title>
     <link rel="icon" sizes="any" href="./icon.svg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/style.css">
@@ -25,6 +25,7 @@
         <button value="-1">-</button>
     </div>
     <div id="control">
+        <span id="playtime">00:00</span>
         <input id="progress" type="range" min="0" max="0" value="0">
         <input id="volume" type="range" min="0" max="100" value="100">
         <button id="fullscreen" class="material-icons">&#xE5D0;</button>
@@ -264,6 +265,15 @@
             }, 3000));
         });
 
+        function time2text(time) {
+            const hl = parseInt(time);
+            let min = Math.floor(hl / 60).toString();
+            let sec = Math.floor(hl % 60).toString();
+            if (min.length === 1) min = "0" + min;
+            if (sec.length === 1) sec = "0" + sec;
+            return min + ":" + sec;
+        }
+
         $(audio).on('pause', function (e) {
             $(document.body).trigger('mousemove');
             $('#play').addClass('e');
@@ -288,6 +298,7 @@
             $('#speed .e').trigger('click');
         }).on('timeupdate', function () {
             $('#progress').val(this.currentTime);
+            $('#playtime').text(time2text(this.currentTime));
         });
 
         $('#progress').on('change', function () {

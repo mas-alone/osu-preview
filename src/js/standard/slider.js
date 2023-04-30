@@ -45,22 +45,25 @@ Slider.prototype.draw = function(time, ctx)
     ctx.globalAlpha = Math.max(0, Math.min(opacity, 1));
 
     this.drawPath(ctx);
-    this.drawCircle(this.endPosition, ctx);
-    this.drawCircle(this.position, ctx);
+    // this.drawCircle(this.endPosition, ctx);
+    // this.drawCircle(this.position, ctx);
 
     var repeat = -dt * this.repeat / this.duration;
     //                                   this.repeat - this.repeat % 2: 홀수면 짝수로 내리기
     if (this.repeat > 1 && repeat + 1 <= (this.repeat & ~1))
     {
+        this.drawCircle(this.endPosition, ctx);
         this.drawText(this.endPosition, Slider.REVERSE_ARROW, this.curve.endAngle, ctx);
     }
     //                              this.repeat - (this.repeat + 1) % 2: 짝수면 홀수로 내리기
     if (repeat > 0 && repeat + 1 <= this.repeat - !(this.repeat & 1))
     {
+        this.drawCircle(this.position, ctx);
         this.drawText(this.position, Slider.REVERSE_ARROW, this.curve.startAngle, ctx);
     }
     else if (dt >= 0)
     {
+        this.drawCircle(this.position, ctx);
         this.drawText(this.position, this.combo, 0, ctx);
     }
 
