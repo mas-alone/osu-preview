@@ -31,8 +31,8 @@
         <button id="fullscreen" class="material-icons">&#xE5D0;</button>
     </div>
     <div id="title">
-        <img src="./icon.svg" width="20" height="30" alt="아까네코 종이모형">
-        <a target="_blank">Loading...</a>
+        <img src="./icon.svg" width="20" height="30" alt="基于血猫">
+        <a target="_blank">加载中...</a>
     </div>
 
     <script src="https://cdn.staticfile.org/jquery/3.6.4/jquery.min.js"></script>
@@ -97,8 +97,16 @@
                 const response = await fetch("https://api.sayobot.cn/v2/beatmapinfo?T=1&K=" + beatmapID);
                 const data = await response.json();
                 console.log(data);
+                if (!data) {
+                    $('#title a').text("sayobot API无法访问");
+                    return;
+                }
                 //setID = data.ParentSetId;
                 const sayoData = data.data;
+                if (!sayoData) {
+                    $('#title a').text("无法从API获取谱面信息，可能sayobot尚未同步");
+                    return;
+                }
                 setID = sayoData.sid;
                 //osufilename = data.OsuFile;
                 const artist = sayoData.artist;
@@ -111,12 +119,24 @@
                 const zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
                 //var response2 = await fetch("https://chimu.moe" + data.DownloadPath);
                 var response2 = await fetch(`https://txy1.sayobot.cn/beatmaps/download/mini/${setID}?server=auto`);
-
                 if (response2.status >= 400 && response2.status < 600) {
-                    $('#title a').text("beatmap not found on mirror, sorry");
+                    $('#title a').text("无法从sayobot下载该谱面");
                     return;
                 }
-                var blob = await response2.blob();
+                const resreader = response2.body.getReader();
+                const zipLength = response2.headers.get('Content-Length');
+                const zipType = response2.headers.get('Content-Type');
+                let receivedLength = 0;
+                let zipData = [];
+                while(true) {
+                    const {done, value} = await resreader.read();
+                    if(done) break;
+                    zipData.push(value);
+                    receivedLength += value.length;
+                    $('#title a').text("下载谱面... (" + (receivedLength/1e6).toFixed(2) + "MB / " + (zipLength/1e6).toFixed(2) + "MB)");
+                }
+                // var blob = await response2.blob();
+                const blob = new Blob(zipData, {type: zipType});
                 console.log("osu zip file: " + URL.createObjectURL(blob));
                 const reader = new zip.ZipReader(new zip.BlobReader(blob));
                 // get all entries from the zip
