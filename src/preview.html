@@ -160,40 +160,45 @@
                                 new zip.TextWriter()
                             );
                             osufile = text;
-                            console.log(text);
+                            // console.log(text);
                             let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                             if (bgmatch) {
-                                console.log("yay")
                                 bgfilename = bgmatch[0];
-                                console.log(bgfilename);
+                                console.log("搜索背景文件名：" + bgfilename);
                             }
                             let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
                             if (audiomatch) {
                                 audiofilename = audiomatch[0];
-                                console.log(audiofilename);
+                                console.log("搜索音频文件名：" + audiofilename);
                             }
                         }
                     }
                     if (!found) {
+                        // 仅匹配难度名搜索
+                        console.log("定位谱面文件失败，尝试仅匹配难度名英文字符");
                         for (entry in entries) {
-                            let string1 = entries[entry].filename.replace(/[^a-zA-Z]/g, "");
-                            let string2 = osufilename.replace(/[^a-zA-Z]/g, "");
+                            let lastIndex = entries[entry].filename.lastIndexOf("[");
+                            let string1 = entries[entry].filename.substring(lastIndex);
+                            string1 = string1.replace(/[^a-zA-Z0-9]/g, " ");
+                            let string2 = "[" + sayoData.bid_data[diffIndex].version + "].osu";
+                            string2 = string2.replace(/[^a-zA-Z0-9]/g, " ");
                             if (string1.toLowerCase() === string2.toLowerCase()) {
+                                found = true;
                                 let text = await entries[entry].getData(
                                     // writer
                                     new zip.TextWriter()
                                 );
                                 osufile = text;
-                                console.log(text);
+                                // console.log(text);
                                 let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                                 if (bgmatch) {
                                     bgfilename = bgmatch[0];
-                                    console.log(bgfilename);
+                                    console.log("搜索背景文件名：" + bgfilename);
                                 }
                                 let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
                                 if (audiomatch) {
                                     audiofilename = audiomatch[0];
-                                    console.log(audiofilename);
+                                    console.log("搜索音频文件名：" + audiofilename);
                                 }
                             }
                         }
@@ -214,8 +219,9 @@
                             }
                         }
                         if (!bgfound) {
+                            console.log("定位背景文件失败，尝试仅匹配英文字符");
                             for (entry in entries) {
-                                if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === bgfilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
+                                if (entries[entry].filename.replace(/[^a-zA-Z0-9]/g, " ") === bgfilename.replace(/[^a-zA-Z0-9]/g, " ")) {
                                     bgfound = true;
                                     let extension = bgfilename.split(".").pop();
                                     let bgblob2 = await entries[entry].getData(
@@ -244,8 +250,9 @@
                             }
                         }
                         if (!audiofound) {
+                            console.log("定位音乐文件失败，尝试仅匹配英文字符");
                             for (entry in entries) {
-                                if (entries[entry].filename.replace(/[^\x00-\x7F]/g, "").toLowerCase() === audiofilename.replace(/[^\x00-\x7F]/g, "").toLowerCase()) {
+                                if (entries[entry].filename.replace(/[^a-zA-Z0-9]/g, " ") === audiofilename.replace(/[^a-zA-Z0-9]/g, " ")) {
                                     audiofound = true;
                                     let extension = audiofilename.split(".").pop();
                                     let audioblob2 = await entries[entry].getData(
