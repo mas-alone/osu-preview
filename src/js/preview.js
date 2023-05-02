@@ -45,7 +45,7 @@ Preview.prototype.load = function (bgblob, osufile, success, fail) {
     var self = this;
     try {
             self.beatmap = Beatmap.parse(osufile);
-            self.background.src = bgblob;
+            if (bgblob) self.background.src = bgblob;
             self.ctx.restore();
             self.ctx.save();
             self.beatmap.update(self.ctx);
