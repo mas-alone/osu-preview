@@ -11,9 +11,7 @@ function Preview(dest) {
     var self = this;
     this.background = new Image();
     this.background.setAttribute('crossOrigin', 'anonymous');
-    this.background.addEventListener('load', function () {
-        
-
+    let drawBG = function () {
         var canvas = document.createElement('canvas');
         canvas.id = 'bgcanvas';
         canvas.width = self.screen.width;
@@ -31,8 +29,13 @@ function Preview(dest) {
         if (typeof self.beatmap.processBG != 'undefined') {
             self.beatmap.processBG(ctx);
         }
-        self.container.style.backgroundImage = 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + self.background.src + ')';
-    });
+        canvas.toBlob(function(blob) {
+            var url = URL.createObjectURL(blob);
+            self.background.src = url;
+            self.container.style.backgroundImage = 'url(' + url + ')';
+        });
+    }
+    this.background.addEventListener('load', drawBG, {once: true});
     this.background.addEventListener('error', function () {
         self.container.style.backgroundImage = 'none';
     });
