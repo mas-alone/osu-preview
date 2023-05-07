@@ -12,6 +12,7 @@ function Catch(osu)
     this.circleRadius = this.circleDiameter / 2;
     this.smallRadius = this.circleRadius / 2;
     this.tinyRadius = this.smallRadius / 5;
+    this.bananaRadius = this.circleRadius * 0.8;
 
     var combo = 1,
         comboIndex = -1,

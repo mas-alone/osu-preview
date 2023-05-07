@@ -23,7 +23,7 @@ BananaShower.prototype.buildNested = function() {
             time,
             x: 0,
             color: 'rgb(255,240,0)',
-            radius: this.beatmap.circleRadius,
+            radius: this.beatmap.bananaRadius,
         }, this.beatmap));
 
         time += spacing;

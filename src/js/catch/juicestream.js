@@ -156,5 +156,21 @@ JuiceStream.prototype.buildNested = function() {
         }
     }
 
+    /* TODO BUG!!!
+     * 在预览 #4057684 时第一个滑条出现了
+     * PalpableCatchHitObject {beatmap: Catch, type: 'TinyDroplet', time: 464.57142857142895, …}
+     * PalpableCatchHitObject {beatmap: Catch, type: 'Droplet', time: 464.571428571429, …}
+     * 物件数量偏差导致后续随机数错误
+     * 暂时找不到原因，可能因为计算精度问题，临时手动将其剔除
+     */
+    let tmp_droplets = this.nested.filter((item) => item.type === "Droplet");
+    this.nested = this.nested.filter((item) => {
+        if (item.type != "TinyDroplet") return true;
+        for (let td = 0; td < tmp_droplets.length; td++) {
+            if (Math.abs(item.time - tmp_droplets[td].time) < 0.01) return false;
+        }
+        return true;
+    });
+
     return this;
 }
