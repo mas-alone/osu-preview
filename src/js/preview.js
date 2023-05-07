@@ -23,7 +23,7 @@ function Preview(dest) {
         ctx.drawImage(this, (this.width - sWidth) / 2, 0, sWidth, this.height,
             0, 0, self.screen.width, self.screen.height);
         // background dim
-        ctx.fillStyle = 'rgba(0, 0, 0, .4)';
+        ctx.fillStyle = 'rgba(0, 0, 0, .5)';
         ctx.fillRect(0, 0, self.screen.width, self.screen.height);
 
         if (typeof self.beatmap.processBG != 'undefined') {

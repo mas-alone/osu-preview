@@ -149,10 +149,10 @@ Catch.prototype.hitObjectTypes = {};
 Catch.ID = 2;
 Beatmap.modes[Catch.ID] = Catch;
 Catch.DEFAULT_COLORS = [
-    'rgb(0,202,0)',
-    'rgb(18,124,255)',
-    'rgb(242,24,57)',
-    'rgb(255,292,0)'
+    'rgb(255,210,128)',
+    'rgb(128,255,128)',
+    'rgb(128,191,255)',
+    'rgb(191,128,255)'
 ];
 Catch.prototype.update = function(ctx) {
     ctx.translate((Beatmap.WIDTH - Beatmap.MAX_X) / 2, (Beatmap.HEIGHT - Beatmap.MAX_Y) / 2);
