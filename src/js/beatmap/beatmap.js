@@ -19,6 +19,7 @@ function Beatmap(osu)
     this.OverallDifficulty = 5;
     this.ApproachRate = undefined;
     this.SliderMultiplier = 1.4;
+    this.SliderTickRate = 1;
 
     // [TimingPoints]
     this.TimingPoints = [];
@@ -87,7 +88,7 @@ function Beatmap(osu)
                 {
                     this.HitObjects.push(HitObject.parse(line, this));
                 }
-                catch (e) {}
+                catch (e) { console.log(e)}
                 break;
             }
         }

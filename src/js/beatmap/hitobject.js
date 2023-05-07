@@ -15,7 +15,7 @@ HitObject.parse = function(line, beatmap)
     var data = line.split(',');
     if (data.length < 5)
     {
-        throw 'invalid data';
+        throw 'invalid data: ' + line;
     }
 
     var type = data[3] & beatmap.hitObjectTypeMask;

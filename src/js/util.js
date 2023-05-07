@@ -34,6 +34,11 @@ Math.ccw = function(a, b, c)
     }
     return 0;
 };
+Math.clamp = function(num, min, max) {
+    if (num < min) return min;
+    if (num > max) return max;
+    return num;
+}
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob#Polyfill
 if (!HTMLCanvasElement.prototype.toBlob)
 {

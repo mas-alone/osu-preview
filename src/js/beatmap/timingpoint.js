@@ -14,12 +14,13 @@ function TimingPoint(line)
     if (this.beatLength >= 0)
     {
         TimingPoint.parent = this;
+        this.sliderVelocity = 1;
     }
     else
     {
         this.parent = TimingPoint.parent;
-        var sliderVelocity = -100 / this.beatLength;
-        this.beatLength = this.parent.beatLength / sliderVelocity;
+        this.sliderVelocity = -100 / this.beatLength;
+        this.beatLength = this.parent.beatLength / this.sliderVelocity;
         this.meter = this.parent.meter;
     }
 }

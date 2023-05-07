@@ -9,3 +9,7 @@ Modify from [jmir.ml](https://github.com/jmir1/osu-preview)
 
  - added/modified some stuffs
  
+2023.5.7 add catch preview
+ 
+ - bug:  bananas position
+ 

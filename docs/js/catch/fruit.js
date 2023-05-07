@@ -1,0 +1,1 @@
+function Fruit(t,o){HitObject.call(this,t,o)}Fruit.prototype=Object.create(HitObject.prototype,{newCombo:{get:function(){return 4&this.flag}},comboSkip:{get:function(){return this.flag>>4}}}),(Fruit.prototype.constructor=Fruit).ID=1,Catch.prototype.hitObjectTypes[Fruit.ID]=Fruit;
