@@ -2,10 +2,10 @@ function Standard(osu)
 {
     Beatmap.call(this, osu);
 
+    let savedDefaultColor = window.localStorage.getItem("DefaultColor");
+    this.useDefaultColor = (savedDefaultColor) ? parseInt(savedDefaultColor) : 0;
 
-
-    if (this.Colors.length)
-    {
+    if (this.Colors.length && !this.useDefaultColor) {
         this.Colors.push(this.Colors.shift());
     }
     else

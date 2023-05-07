@@ -22,7 +22,7 @@ button {
     font: 14px sans-serif;
 }
 
-button::-moz-focus-inner {
+#control button::-moz-focus-inner {
     padding: 0;
     border: 0;
 }
@@ -87,6 +87,32 @@ body.h #mania.e {
     width: 40px;
 }
 
+#settingsPanel {
+    right: 10px;
+    bottom: 50px;
+    width: 150px;
+    background-color: rgba(0, 0, 0, .6);
+    border: 1px solid #aaa;
+}
+
+#settingsPanel button {
+    margin: 2px;
+    padding: 0;
+    border: none;
+    outline: 0;
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    width: 146px;
+    height: 36px;
+    font: 14px sans-serif;
+}
+
+#settingsPanel .settingsbtn:hover, #settingsPanel .settingsbtn:active {
+    border: 1px solid #aaa;
+}
+
+
 #control {
     bottom: 0;
     left: 0;
@@ -110,11 +136,11 @@ input {
 }
 
 #progress {
-    width: calc(100% - 206px);
+    width: calc(100% - 226px);
 }
 
 #volume {
-    width: 100px;
+    width: 80px;
 }
 
 #title {
@@ -171,4 +197,10 @@ a:hover {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+#settings {
+    position: absolute;
+    top: 0;
+    right: 40;
 }

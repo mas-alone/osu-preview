@@ -2,7 +2,10 @@ function Catch(osu)
 {
     Beatmap.call(this, osu);
 
-    if (this.Colors.length) {
+    let savedDefaultColor = window.localStorage.getItem("DefaultColor");
+    this.useDefaultColor = (savedDefaultColor) ? parseInt(savedDefaultColor) : 0;
+
+    if (this.Colors.length && !this.useDefaultColor) {
         this.Colors.push(this.Colors.shift());
     }
     else {
