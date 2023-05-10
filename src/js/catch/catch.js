@@ -12,10 +12,13 @@ function Catch(osu)
         this.Colors = Catch.DEFAULT_COLORS;
     }
 
-    this.circleRadius = this.circleDiameter / 2;
+    this.circleRadius = this.circleDiameter / 2 - 4;
     this.smallRadius = this.circleRadius / 2;
     this.tinyRadius = this.smallRadius / 2;
     this.bananaRadius = this.circleRadius * 0.8;
+
+    this.CATCHER_HEIGHT = Beatmap.HEIGHT / 8;
+    this.FALLOUT_TIME = (this.CATCHER_HEIGHT / Beatmap.HEIGHT) * this.approachTime;
 
     var combo = 1,
         comboIndex = -1,
@@ -171,7 +174,7 @@ Catch.prototype.draw = function(time, ctx)
     while (this.tmp.first < this.fullCatchObjects.length)
     {
         var catchHitObject = this.fullCatchObjects[this.tmp.first];
-        if (time <= catchHitObject.time)
+        if (time <= catchHitObject.time + this.FALLOUT_TIME)
         {
             break;
         }
@@ -185,10 +188,29 @@ Catch.prototype.draw = function(time, ctx)
     for (var i = this.tmp.last; i >= this.tmp.first; i--)
     {
         var catchHitObject = this.fullCatchObjects[i];
-        if (time > catchHitObject.time)
+        if (time > catchHitObject.time + this.FALLOUT_TIME)
         {
             continue;
         }
         catchHitObject.draw(time, ctx);
     }
+};
+Catch.prototype.processBG = function(ctx)
+{
+    // line
+    ctx.beginPath();
+    ctx.moveTo(0, Beatmap.HEIGHT - this.CATCHER_HEIGHT);
+    ctx.lineTo(Beatmap.WIDTH, Beatmap.HEIGHT - this.CATCHER_HEIGHT);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // plate
+    let plateHeight = 4;
+    ctx.beginPath();
+    ctx.rect(Beatmap.WIDTH / 2 - this.CATCHER_BASE_SIZE / 2, Beatmap.HEIGHT - this.CATCHER_HEIGHT - plateHeight / 2, this.CATCHER_BASE_SIZE, plateHeight);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.fill();
 };

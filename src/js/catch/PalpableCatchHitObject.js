@@ -11,11 +11,11 @@ function PalpableCatchHitObject(data, beatmap)
 PalpableCatchHitObject.prototype.draw = function(time, ctx)
 {
     var dt = this.time - time;
-    if (dt >= 0) {
-        if (this.type === "Banana") this.drawBanana({x: this.x, y: (1 - dt / this.beatmap.approachTime) * Beatmap.HEIGHT}, ctx);
+    if (dt >= -this.beatmap.FALLOUT_TIME) {
+        if (this.type === "Banana") this.drawBanana({x: this.x, y: (1 - dt / this.beatmap.approachTime) * Beatmap.HEIGHT - this.beatmap.CATCHER_HEIGHT}, ctx);
         else {
-            if (this.hyperDash) this.drawDashCircle({x: this.x, y: (1 - dt / this.beatmap.approachTime) * Beatmap.HEIGHT}, ctx);
-            this.drawCircle({x: this.x, y: (1 - dt / this.beatmap.approachTime) * Beatmap.HEIGHT}, ctx);
+            if (this.hyperDash) this.drawDashCircle({x: this.x, y: (1 - dt / this.beatmap.approachTime) * Beatmap.HEIGHT - this.beatmap.CATCHER_HEIGHT}, ctx);
+            this.drawCircle({x: this.x, y: (1 - dt / this.beatmap.approachTime) * Beatmap.HEIGHT - this.beatmap.CATCHER_HEIGHT}, ctx);
         }
     }
 };

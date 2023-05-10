@@ -9,7 +9,7 @@ HoldNote.prototype.constructor = HoldNote;
 HoldNote.ID = 128;
 Mania.prototype.hitObjectTypes[HoldNote.ID] = HoldNote;
 HoldNote.WIDTH_SCALE = 0.8;
-HoldNote.OPACITY = 0.66;
+HoldNote.OPACITY = 0.88;
 HoldNote.prototype.draw = function(scroll, ctx)
 {
     var sy = this.beatmap.calcY(this.position.y, scroll) - Mania.COLUMN_WIDTH / 3,
