@@ -205,9 +205,9 @@ Catch.prototype.processBG = function(ctx)
     ctx.lineWidth = 2;
     ctx.stroke();
     // plate
-    let plateHeight = 4;
+    let plateHeight = this.catchWidth / 60;
     ctx.beginPath();
-    ctx.rect(Beatmap.WIDTH / 2 - this.CATCHER_BASE_SIZE / 2, Beatmap.HEIGHT - this.CATCHER_HEIGHT - plateHeight / 2, this.CATCHER_BASE_SIZE, plateHeight);
+    ctx.rect(Beatmap.WIDTH / 2 - this.catchWidth / 2, Beatmap.HEIGHT - this.CATCHER_HEIGHT - plateHeight / 2, this.catchWidth, plateHeight);
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 8;
     ctx.stroke();
