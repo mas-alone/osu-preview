@@ -1,3 +1,5 @@
 node_modules
 package-lock.json
 src/js/zip.min.js
+# 一些未来会加入的东西
+tmp

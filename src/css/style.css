@@ -96,6 +96,7 @@ body.h #mania.e {
     border: 1px solid #aaa;
 }
 
+
 #settingsPanel button {
     margin: 2px;
     padding: 0;
@@ -109,10 +110,52 @@ body.h #mania.e {
     font: 14px sans-serif;
 }
 
-#settingsPanel .settingsbtn:hover, #settingsPanel .settingsbtn:active {
+#openPanel {
+    top: 50%;
+    left: 30%;
+    transform: translateY(-50%);
+    width: 40%;
+    height: 50%;
     border: 1px solid #aaa;
 }
 
+#openTitle {
+    color: #fff;
+    font: 20px sans-serif;
+    border-bottom: solid 1px #fff;
+}
+
+#openContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    max-height: calc(100% - 30px);
+}
+
+#openContent button{
+    margin: 2px;
+    padding: 0;
+    border: 1px solid #aaa;
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    width: calc(100% - 4px);
+    height: 36px;
+    font: 16px sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#fileInput {
+    display: none;
+}
+
+#settingsPanel .settingsbtn:hover, #settingsPanel .settingsbtn:active {
+    border: 1px solid #aaa;
+}
 
 #control {
     bottom: 0;
