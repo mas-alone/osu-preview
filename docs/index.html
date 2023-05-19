@@ -13,7 +13,9 @@
             height: 100%;
             max-width: 960px;
             display: inline;
-
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
         }
 
         .title {
@@ -148,21 +150,8 @@
             window.location = './localpreview.html';
         }
 
-        if (window.location.host.indexOf("hiosu.com") >= 0) {
-            document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundAttachment = "fixed";
-            let httpRequest = new XMLHttpRequest();
-            httpRequest.open('GET', 'https://bbs.hiosu.com/api' + Date.now());
-            httpRequest.send(null);
-            httpRequest.onreadystatechange = function () {
-                if (httpRequest.readyState === 4) {
-                    if (httpRequest.status === 200) {
-                        document.body.style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(" + httpRequest.responseText + ")";
-                    }
-                }
-            }
-        }
+        document.body.style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(" + "https://www.loliapi.com/acg/" + ")";
+
     </script>
 
 </body>
