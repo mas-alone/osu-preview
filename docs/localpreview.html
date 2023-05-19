@@ -10,6 +10,7 @@
     <link rel="icon" sizes="any" href="./icon.svg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/style.css">
+</head>
 
 <body class="h">
     <div id="container" class="x-viewbox"></div>
@@ -28,8 +29,9 @@
     <div id="openPanel">
         <div id="openTitle"><span>打开本地osz文件</span></div>
         <div id="openContent">
-            <input type="file" id="fileInput"></input>
-            <button id="FakeFileInput" onclick="document.getElementById('fileInput').click()">选择OSZ文件</button>
+            <input type="file" id="fileInput" />
+            <button id="FakeFileInput" style="width:auto;min-width: 50%;"
+                onclick="document.getElementById('fileInput').click()">选择OSZ文件</button>
         </div>
     </div>
 
@@ -142,8 +144,9 @@
                         sbtn.setAttribute("diff", diffIndex);
                         let lastIndex = diffs[diffIndex].filename.lastIndexOf("[");
                         let diffTitle = diffs[diffIndex].filename.substring(lastIndex);
+                        diffTitle = diffTitle.substring(0, diffTitle.length - 4);
                         sbtn.innerText = diffTitle;
-                        sbtn.addEventListener('click', async function(){
+                        sbtn.addEventListener('click', async function () {
                             let diffIndex = parseInt(this.getAttribute("diff"));
                             document.getElementById("openTitle").textContent = "加载中...";
                             await parseBeatmap(diffIndex, zipReader);
@@ -433,5 +436,6 @@
         });
 
     </script>
+</body>
 
 </html>

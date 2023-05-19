@@ -11,3 +11,4 @@ https://osu-preview-eight.vercel.app/preview.html#BEATMAP_ID
  
  - bug: bananas position, fixed with a temporary method
  
+2023.5.19 add local preview

@@ -10,6 +10,7 @@
     <link rel="icon" sizes="any" href="./icon.svg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/style.css">
+</head>
 
 <body class="h">
     <div id="container" class="x-viewbox"></div>
@@ -131,7 +132,7 @@
                 osufilename = artist + " - " + title + " (" + sayoData.creator + ") [" + sayoData.bid_data[diffIndex].version + "].osu";
                 console.log("osufilename:" + osufilename);
 
-                audiolength = sayoData.bid_data.sort(function(a,b) {
+                audiolength = sayoData.bid_data.sort(function (a, b) {
                     return b.length - a.length;
                 })[0].length;
 
@@ -147,15 +148,15 @@
                 const zipType = response2.headers.get('Content-Type');
                 let receivedLength = 0;
                 let zipData = [];
-                while(true) {
-                    const {done, value} = await resreader.read();
-                    if(done) break;
+                while (true) {
+                    const { done, value } = await resreader.read();
+                    if (done) break;
                     zipData.push(value);
                     receivedLength += value.length;
-                    $('#title a').text("下载谱面... (" + (receivedLength/1e6).toFixed(2) + "MB / " + (zipLength/1e6).toFixed(2) + "MB)");
+                    $('#title a').text("下载谱面... (" + (receivedLength / 1e6).toFixed(2) + "MB / " + (zipLength / 1e6).toFixed(2) + "MB)");
                 }
                 // var blob = await response2.blob();
-                const blob = new Blob(zipData, {type: zipType});
+                const blob = new Blob(zipData, { type: zipType });
                 console.log("osu zip file: " + URL.createObjectURL(blob));
                 const reader = new zip.ZipReader(new zip.BlobReader(blob));
                 // get all entries from the zip
@@ -467,5 +468,6 @@
         });
 
     </script>
+</body>
 
 </html>
