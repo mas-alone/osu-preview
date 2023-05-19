@@ -134,6 +134,10 @@
     </div>
 
     <script>
+        if (window.location.hash) {
+            window.location = './preview.html' + window.location.hash;
+        }
+
         function gotopreview() {
             let bid = document.getElementById("bid").value;
             if (!bid) window.location = './preview.html';
