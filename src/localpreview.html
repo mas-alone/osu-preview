@@ -27,11 +27,12 @@
     </div>
 
     <div id="openPanel">
-        <div id="openTitle"><span>打开本地osz文件</span></div>
+        <div id="openTitle"><span>打开本地文件</span></div>
         <div id="openContent">
             <input type="file" id="fileInput" />
-            <button id="FakeFileInput" style="width:auto;min-width: 50%;"
-                onclick="document.getElementById('fileInput').click()">选择OSZ文件</button>
+            <input type="file" id="folderInput" webkitdirectory />
+            <button id="FakeFileInput" onclick="document.getElementById('fileInput').click()">选择OSZ文件</button>
+            <button id="FakeFolderInput" onclick="document.getElementById('folderInput').click()">选择谱面文件夹</button>
         </div>
     </div>
 
@@ -108,8 +109,6 @@
         var entries;
         var diffs = [];
 
-        let fileReader = new FileReader();
-
         var fileInput = document.querySelector('#fileInput');
         fileInput.onchange = function () {
             var file = this.files[0];
@@ -138,6 +137,8 @@
                     }
                     document.getElementById("fileInput").remove();
                     document.getElementById("FakeFileInput").remove();
+                    document.getElementById("folderInput").remove();
+                    document.getElementById("FakeFolderInput").remove();
                     document.getElementById("openTitle").textContent = "选择难度";
                     for (diffIndex in diffs) {
                         let sbtn = document.createElement("button");
@@ -252,7 +253,7 @@
 
             }
             // close the ZipReader
-            await zipReader.close();
+            if (zipReader) await zipReader.close();
             // if (bgblob && osufile) {
             // can play without bg or audio
             if (osufile) {
@@ -299,6 +300,198 @@
             } else $('#title a').text("抱歉，未找到谱面文件！");
         }
 
+        var folderInput = document.querySelector('#folderInput');
+        folderfiles = [];
+        folderdiffs = [];
+        function readFile(file) {
+            return new Promise((res, rej) => {
+                // create file reader
+                let reader = new FileReader();
+
+                // register event listeners
+                reader.addEventListener("loadend", e => res(e.target.result));
+                reader.addEventListener("error", rej);
+
+                // read file
+                reader.readAsArrayBuffer(file);
+            });
+        }
+        function readOsuFile(blob) {
+            return new Promise((res, rej) => {
+                // create file reader
+                let reader = new FileReader();
+
+                // register event listeners
+                reader.addEventListener("loadend", e => res(e.target.result));
+                reader.addEventListener("error", rej);
+
+                // read file
+                reader.readAsText(blob, 'utf8');
+            });
+        }
+        folderInput.onchange = async function (e) {
+            let files = e.target.files;
+            for (var file of files) {
+                let data = await readFile(file);
+                let blob = new Blob([data.slice()]);
+                folderfiles.push({ filename: file.name, blob: blob });
+            }
+            if (folderfiles.length) {
+                folderdiffs = [];
+                for (var file of folderfiles) {
+                    let filename = file.filename;
+                    if (filename.toLowerCase().endsWith(".osu")) {
+                        folderdiffs.push(file);
+                    }
+                }
+                if (folderdiffs.length <= 0) {
+                    alert("该文件夹不包含任何谱面");
+                    return;
+                }
+                document.getElementById("fileInput").remove();
+                document.getElementById("FakeFileInput").remove();
+                document.getElementById("folderInput").remove();
+                document.getElementById("FakeFolderInput").remove();
+                document.getElementById("openTitle").textContent = "选择难度";
+                for (diffIndex in folderdiffs) {
+                    let sbtn = document.createElement("button");
+                    sbtn.setAttribute("diff", diffIndex);
+                    let lastIndex = folderdiffs[diffIndex].filename.lastIndexOf("[");
+                    let diffTitle = folderdiffs[diffIndex].filename.substring(lastIndex);
+                    diffTitle = diffTitle.substring(0, diffTitle.length - 4);
+                    sbtn.innerText = diffTitle;
+                    sbtn.addEventListener('click', async function () {
+                        let diffIndex = parseInt(this.getAttribute("diff"));
+                        document.getElementById("openTitle").textContent = "加载中...";
+                        await parseBeatmapFolder(diffIndex);
+                        document.getElementById("openPanel").remove();
+                    });
+                    document.getElementById("openContent").appendChild(sbtn);
+                }
+            }
+            else {
+                alert("该文件不是osz文件");
+            }
+        };
+
+        async function parseBeatmapFolder(diffIndex) {
+            let text = await readOsuFile(folderdiffs[diffIndex].blob)
+            let osufile = text;
+            let bgfilename;
+            let bgblob;
+            let audiofilename;
+            let audioblob;
+            // console.log(text);
+            let bgmatch = text.match(/(?<=0,0,").+(?=")/);
+            if (bgmatch) {
+                bgfilename = bgmatch[0];
+                console.log("背景文件名：" + bgfilename);
+            }
+            let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
+            if (audiomatch) {
+                audiofilename = audiomatch[0];
+                console.log("音频文件名：" + audiofilename);
+            }
+
+            // get all entries from the zip
+            if (folderfiles.length) {
+                //make bg blob
+                if (bgfilename) {
+                    let bgfound = false;
+                    for (fileIndex in folderfiles) {
+                        if (folderfiles[fileIndex].filename.toLowerCase() === bgfilename.toLowerCase()) {
+                            bgfound = true;
+                            let extension = bgfilename.split(".").pop();
+                            let bgblob2 = folderfiles[fileIndex].blob;
+                            bgblob = URL.createObjectURL(bgblob2, { type: "image/" + extension });
+                            console.log(bgblob);
+                        }
+                    }
+                    if (!bgfound) {
+                        console.log("定位背景文件失败，尝试仅匹配英文字符");
+                        for (fileIndex in folderfiles) {
+                            if (folderfiles[fileIndex].filename.replace(/[^a-zA-Z0-9]/g, " ") === bgfilename.replace(/[^a-zA-Z0-9]/g, " ")) {
+                                bgfound = true;
+                                let extension = bgfilename.split(".").pop();
+                                let bgblob2 = folderfiles[fileIndex].blob;
+                                bgblob = URL.createObjectURL(bgblob2, { type: "image/" + extension });
+                                console.log(bgblob);
+                            }
+                        }
+                    }
+                }
+                //make audio blob
+                if (audiofilename) {
+                    let audiofound = false;
+                    for (fileIndex in folderfiles) {
+                        if (folderfiles[fileIndex].filename.toLowerCase() === audiofilename.toLowerCase()) {
+                            audiofound = true;
+                            let extension = audiofilename.split(".").pop();
+                            let audioblob2 = folderfiles[fileIndex].blob;
+                            audioblob = URL.createObjectURL(audioblob2, { type: "audio/" + extension });
+                            console.log(audioblob);
+                        }
+                    }
+                    if (!audiofound) {
+                        console.log("定位音乐文件失败，尝试仅匹配英文字符");
+                        for (fileIndex in folderfiles) {
+                            if (folderfiles[fileIndex].filename.replace(/[^a-zA-Z0-9]/g, " ") === audiofilename.replace(/[^a-zA-Z0-9]/g, " ")) {
+                                audiofound = true;
+                                let extension = audiofilename.split(".").pop();
+                                let audioblob2 = folderfiles[fileIndex].blob;
+                                audioblob = URL.createObjectURL(audioblob2, { type: "audio/" + extension });
+                                console.log("audio: " + audioblob);
+                            }
+                        }
+                    }
+                }
+
+            }
+            // if (bgblob && osufile) {
+            // can play without bg or audio
+            if (osufile) {
+                let warningText = "";
+                if (!bgblob) {
+                    warningText += " (无背景)";
+                    bgblob = null;
+                }
+                if (!audioblob) {
+                    audio = new FakeAudio(audiolength);
+                    $('#play').off("click");
+                    $('#play').on('click', function (e) {
+                        e.preventDefault();
+                        if ($(this).hasClass('e')) {
+                            audio.play();
+                        }
+                        else {
+                            audio.pause();
+                        }
+                    });
+                    $('#progress').off("change");
+                    $('#progress').val(0).prop('max', audio.duration);
+                    $('#progress').on('change', function (e) {
+                        e.preventDefault();
+                        audio.currentTime = parseFloat(this.value);
+                        preview.beatmap.refresh();
+                        window.preview.at(audio.currentTime * 1000);
+                    });
+                    warningText += " (无音乐)";
+                    audioblob = null;
+                }
+                preview.load(bgblob, osufile, function () {
+                    audio.src = audioblob;
+                    $('#title a').text(this.beatmap.toString() + warningText);
+                    if (this.beatmap instanceof Mania) {
+                        $('#mania').addClass('e');
+                        $('#scroll').text(this.beatmap.scrollSpeed);
+                    }
+                    $('#play').addClass('e');
+                }, function (e) {
+                    alert(e);
+                    console.log(e);
+                });
+            } else $('#title a').text("抱歉，未找到谱面文件！");
+        }
 
         $(document.body).on('mousemove', function () {
             var self = $(this);

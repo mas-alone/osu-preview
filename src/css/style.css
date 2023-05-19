@@ -130,17 +130,11 @@ body.h #mania.e {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     overflow-y: auto;
-    max-height: calc(100% - 30px);
-}
-
-#FakeFileInput {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+    height: calc(100% - 30px);
+    align-content: center;
+    flex-direction: column;
 }
 
 #openContent button{
@@ -160,6 +154,10 @@ body.h #mania.e {
 }
 
 #fileInput {
+    display: none;
+}
+
+#folderInput {
     display: none;
 }
 

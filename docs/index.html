@@ -1,1 +1,166 @@
-<!DOCTYPE html><html><head><title>redirecting</title><script>window.location='./preview.html'</script></html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="nofollow, noindex, noarchive">
+    <title>osu!preview</title>
+    <link rel="icon" sizes="any" href="./icon.svg">
+    <style>
+        body {
+            background: #1a1a1a;
+            height: 100%;
+            max-width: 960px;
+            display: inline;
+
+        }
+
+        .title {
+            margin: 0 12px 60px 12px;
+            font-size: 24px;
+            color: #aaa;
+        }
+
+        .detail {
+            font-size: 20px;
+            color: #aaa;
+        }
+
+        h1 {
+            font-size: 72px;
+            color: #eee;
+            margin: 32px 0 16px 0;
+        }
+
+        h2 {
+            font-size: 44px;
+            color: #ddd;
+            margin: 32px 0;
+        }
+
+        h3 {
+            font-size: 28px;
+            color: #ddd;
+            margin: 32px 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+
+        .box {
+            width: 320px;
+            height: 200px;
+            padding: 12px 16px;
+            margin: 12px;
+            border: 1px solid #aaa;
+        }
+
+        .footbox {
+            width: 280px;
+            height: 180px;
+            padding: 12px 16px;
+        }
+
+        .boxdiv {
+            margin: 40px 12px 20px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .textbox {
+            margin: 2px;
+            padding: 0;
+            width: 120px;
+            height: 40px;
+            background: transparent;
+            color: #fff;
+            font-size: 16px;
+            border: 1px solid #aaa;
+            text-align: center;
+        }
+
+        .gotobtn {
+            margin: 2px;
+            padding: 0;
+            border: 1px solid #aaa;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            font: 24px sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="padding:32px 16px; text-align: center;">
+        <h1>osu! 谱面预览</h1>
+        <p class="title">全模式谱面网页直接预览</p>
+        <div class="container">
+            <div class="box">
+                <h2>在线谱面预览</h2>
+                <div class="boxdiv">
+                    <input id="bid" class="textbox" type="text" placeholder="输入谱面BID" />
+                    <input class="gotobtn" type="button" value="▶" onclick="gotopreview()">
+                </div>
+            </div>
+            <div class="box">
+                <h2>本地谱面预览</h2>
+                <div class="boxdiv">
+                    <input class="gotobtn" type="button" value="▶" onclick="gotolocalpreview()">
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin: 60px 0;">
+            <div class="footbox">
+                <h3>基于血猫</h3>
+                <p class="detail">在血猫预览功能基础上进行本地化改进、扩充预览模式、增强预览功能</p>
+            </div>
+            <div class="footbox">
+                <h3>小夜加速</h3>
+                <p class="detail">使用Sayobot镜像服务器加速在线预览时谱面下载速度</p>
+            </div>
+            <div class="footbox">
+                <h3>HIOSU托管</h3>
+                <p class="detail">感谢HIOSU提供网页托管支持，提高网页加载速度</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function gotopreview() {
+            let bid = document.getElementById("bid").value;
+            if (!bid) window.location = './preview.html';
+            else window.location = './preview.html#' + bid;
+        }
+
+        function gotolocalpreview() {
+            window.location = './localpreview.html';
+        }
+
+        if (window.location.host.indexOf("hiosu.com") >= 0) {
+            document.body.style.backgroundRepeat = "no-repeat";
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundAttachment = "fixed";
+            let httpRequest = new XMLHttpRequest();
+            httpRequest.open('GET', 'https://bbs.hiosu.com/api' + Date.now());
+            httpRequest.send(null);
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState === 4) {
+                    if (httpRequest.status === 200) {
+                        document.body.style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(" + httpRequest.responseText + ")";
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
