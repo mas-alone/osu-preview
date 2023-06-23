@@ -5,6 +5,9 @@ function Standard(osu)
     let savedDefaultColor = window.localStorage.getItem("DefaultColor");
     this.useDefaultColor = (savedDefaultColor) ? parseInt(savedDefaultColor) : 0;
 
+    let savedColorChange = window.localStorage.getItem("ColorChange");
+    this.colorChange = (savedColorChange) ? parseInt(savedColorChange) : 0;
+
     if (this.Colors.length && !this.useDefaultColor) {
         this.Colors.push(this.Colors.shift());
     }
@@ -30,7 +33,7 @@ function Standard(osu)
             setComboIndex = 0;
         }
         hitObject.combo = combo++;
-        hitObject.color = this.Colors[comboIndex];
+        hitObject.color = (this.colorChange) ? this.Colors[i % this.Colors.length] : this.Colors[comboIndex];
     }
 
 
