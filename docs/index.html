@@ -67,6 +67,10 @@
             padding: 12px 16px;
         }
 
+        .footbox :hover {
+            cursor: pointer;
+        }
+
         .boxdiv {
             margin: 40px 12px 20px 12px;
             display: flex;
@@ -77,7 +81,7 @@
         .textbox {
             margin: 2px;
             padding: 0;
-            width: 120px;
+            width: 140px;
             height: 40px;
             background: transparent;
             color: #fff;
@@ -108,7 +112,7 @@
             <div class="box">
                 <h2>在线谱面预览</h2>
                 <div class="boxdiv">
-                    <input id="bid" class="textbox" type="text" placeholder="输入谱面BID" />
+                    <input id="bid" class="textbox" type="text" placeholder="输入谱面BID或链接" />
                     <input class="gotobtn" type="button" value="▶" onclick="gotopreview()">
                 </div>
             </div>
@@ -124,11 +128,11 @@
                 <h3>基于血猫</h3>
                 <p class="detail">在血猫预览功能基础上进行本地化改进、扩充预览模式、增强预览功能</p>
             </div>
-            <div class="footbox">
+            <div class="footbox" onclick="location = 'https://osu.sayobot.cn/'">
                 <h3>小夜加速</h3>
                 <p class="detail">使用Sayobot镜像服务器加速在线预览时谱面下载速度</p>
             </div>
-            <div class="footbox">
+            <div class="footbox" onclick="location = 'https://bbs.hiosu.com/'">
                 <h3>HIOSU托管</h3>
                 <p class="detail">感谢HIOSU提供网页托管支持，提高网页加载速度</p>
             </div>
@@ -143,7 +147,12 @@
         function gotopreview() {
             let bid = document.getElementById("bid").value;
             if (!bid) window.location = './preview.html';
-            else window.location = './preview.html#' + bid;
+            else {
+                if (bid.indexOf("osu.ppy.sh")) {
+                    window.location = './preview.html#' + bid.split('/').pop();
+                }
+                else window.location = './preview.html#' + bid;
+            }
         }
 
         function gotolocalpreview() {
