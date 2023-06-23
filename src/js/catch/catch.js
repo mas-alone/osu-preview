@@ -1,5 +1,4 @@
-function Catch(osu)
-{
+function Catch(osu) {
     Beatmap.call(this, osu);
 
     let savedDefaultColor = window.localStorage.getItem("DefaultColor");
@@ -36,7 +35,7 @@ function Catch(osu)
         hitObject.combo = combo++;
         hitObject.color = this.Colors[comboIndex];
 
-        if (hitObject instanceof JuiceStream || hitObject instanceof BananaShower ) {
+        if (hitObject instanceof JuiceStream || hitObject instanceof BananaShower) {
             hitObject.buildNested();
         }
     }
@@ -102,41 +101,39 @@ function Catch(osu)
                 if (item.type != "TinyDroplet") this.palpableObjects.push(item);
             });
         }
-        this.palpableObjects.sort((a,b)=> a.time - b.time);
-        this.fullCatchObjects.sort((a,b)=> a.time - b.time);
+        this.palpableObjects.sort((a, b) => a.time - b.time);
+        this.fullCatchObjects.sort((a, b) => a.time - b.time);
+    }
+    // hyperdash
+    let lastDirection = 0;
+    let lastExcess = this.halfCatcherWidth;
 
-        // hyperdash
-        let lastDirection = 0;
-        let lastExcess = this.halfCatcherWidth;
+    for (let i = 0; i < this.palpableObjects.length - 1; i++) {
+        var currentObject = this.palpableObjects[i];
+        var nextObject = this.palpableObjects[i + 1];
 
-        for (let i = 0; i < this.palpableObjects.length - 1; i++) {
-            var currentObject = this.palpableObjects[i];
-            var nextObject = this.palpableObjects[i + 1];
+        currentObject.hyperDash = false;
 
-            currentObject.hyperDash = false;
+        let thisDirection = nextObject.x > currentObject.x ? 1 : -1;
+        let timeToNext = nextObject.time - currentObject.time - 1000 / 60 / 4; // 1/4th of a frame of grace time, taken from osu-stable
+        let distanceToNext = Math.abs(nextObject.x - currentObject.x) - (lastDirection == thisDirection ? lastExcess : this.halfCatcherWidth);
+        let distanceToHyper = timeToNext * this.BASE_DASH_SPEED - distanceToNext;
 
-            let thisDirection = nextObject.x > currentObject.x ? 1 : -1;
-            let timeToNext = nextObject.time - currentObject.time - 1000 / 60 / 4; // 1/4th of a frame of grace time, taken from osu-stable
-            let distanceToNext = Math.abs(nextObject.x - currentObject.x) - (lastDirection == thisDirection ? lastExcess : this.halfCatcherWidth);
-            let distanceToHyper = timeToNext * this.BASE_DASH_SPEED - distanceToNext;
-
-            if (distanceToHyper < 0) {
-                currentObject.hyperDash = true;
-                lastExcess = this.halfCatcherWidth;
-            }
-            else {
-                lastExcess = Math.clamp(distanceToHyper, 0, this.halfCatcherWidth);
-            }
-
-            lastDirection = thisDirection;
+        if (distanceToHyper < 0) {
+            currentObject.hyperDash = true;
+            lastExcess = this.halfCatcherWidth;
         }
+        else {
+            lastExcess = Math.clamp(distanceToHyper, 0, this.halfCatcherWidth);
+        }
+
+        lastDirection = thisDirection;
     }
 
 }
 Catch.prototype = Object.create(Beatmap.prototype, {
     approachTime: { // droptime
-        get: function()
-        {
+        get: function () {
             return this.ApproachRate < 5
                 ? 1800 - this.ApproachRate * 120
                 : 1200 - (this.ApproachRate - 5) * 150;
@@ -144,8 +141,7 @@ Catch.prototype = Object.create(Beatmap.prototype, {
     },
     // https://github.com/itdelatrisu/opsu/commit/8892973d98e04ebaa6656fe2a23749e61a122705
     circleDiameter: {
-        get: function()
-        {
+        get: function () {
             return 108.848 - this.CircleSize * 8.9646;
         }
     }
@@ -160,43 +156,35 @@ Catch.DEFAULT_COLORS = [
     'rgb(128,191,255)',
     'rgb(191,128,255)'
 ];
-Catch.prototype.update = function(ctx) {
+Catch.prototype.update = function (ctx) {
     ctx.translate((Beatmap.WIDTH - Beatmap.MAX_X) / 2, (Beatmap.HEIGHT - Beatmap.MAX_Y) / 2);
 };
-Catch.prototype.draw = function(time, ctx)
-{
-    if (typeof this.tmp.first == 'undefined')
-    {
+Catch.prototype.draw = function (time, ctx) {
+    if (typeof this.tmp.first == 'undefined') {
         this.tmp.first = 0;
         this.tmp.last = -1;
     }
 
-    while (this.tmp.first < this.fullCatchObjects.length)
-    {
+    while (this.tmp.first < this.fullCatchObjects.length) {
         var catchHitObject = this.fullCatchObjects[this.tmp.first];
-        if (time <= catchHitObject.time + this.FALLOUT_TIME)
-        {
+        if (time <= catchHitObject.time + this.FALLOUT_TIME) {
             break;
         }
         this.tmp.first++;
     }
     while (this.tmp.last + 1 < this.fullCatchObjects.length &&
-        time >= this.fullCatchObjects[this.tmp.last + 1].time - this.approachTime * 1.1)
-    {
+        time >= this.fullCatchObjects[this.tmp.last + 1].time - this.approachTime * 1.1) {
         this.tmp.last++;
     }
-    for (var i = this.tmp.last; i >= this.tmp.first; i--)
-    {
+    for (var i = this.tmp.last; i >= this.tmp.first; i--) {
         var catchHitObject = this.fullCatchObjects[i];
-        if (time > catchHitObject.time + this.FALLOUT_TIME)
-        {
+        if (time > catchHitObject.time + this.FALLOUT_TIME) {
             continue;
         }
         catchHitObject.draw(time, ctx);
     }
 };
-Catch.prototype.processBG = function(ctx)
-{
+Catch.prototype.processBG = function (ctx) {
     // line
     ctx.beginPath();
     ctx.moveTo(0, Beatmap.HEIGHT - this.CATCHER_HEIGHT);
