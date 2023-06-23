@@ -101,9 +101,11 @@ function Catch(osu) {
                 if (item.type != "TinyDroplet") this.palpableObjects.push(item);
             });
         }
-        this.palpableObjects.sort((a, b) => a.time - b.time);
-        this.fullCatchObjects.sort((a, b) => a.time - b.time);
     }
+
+    this.palpableObjects.sort((a, b) => a.time - b.time);
+    this.fullCatchObjects.sort((a, b) => a.time - b.time);
+
     // hyperdash
     let lastDirection = 0;
     let lastExcess = this.halfCatcherWidth;
