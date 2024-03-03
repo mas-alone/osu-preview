@@ -42,7 +42,7 @@
         <a href="" target="_blank">加载中...</a>
     </div>
 
-    <script src="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/3.6.4/jquery.min.js"></script>
 
     <script src="js/util.js"></script>
     <script src="js/fakeaudio.js"></script>
@@ -176,16 +176,14 @@
                             );
                             osufile = text;
                             // console.log(text);
-                            
-                            let bgmatch = text.match(/0,0,"([^"]*)"/);
+                            let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                             if (bgmatch) {
-                                bgfilename = bgmatch[1];
+                                bgfilename = bgmatch[0];
                                 console.log("搜索背景文件名：" + bgfilename);
                             }
-                            
-                            let audiomatch = text.match(/AudioFilename: (.+)/);
+                            let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
                             if (audiomatch) {
-                                audiofilename = audiomatch[1];
+                                audiofilename = audiomatch[0];
                                 console.log("搜索音频文件名：" + audiofilename);
                             }
                         }
@@ -207,16 +205,14 @@
                                 );
                                 osufile = text;
                                 // console.log(text);
-                                
-                                let bgmatch = text.match(/0,0,"([^"]*)"/);
+                                let bgmatch = text.match(/(?<=0,0,").+(?=")/);
                                 if (bgmatch) {
-                                    bgfilename = bgmatch[1];
+                                    bgfilename = bgmatch[0];
                                     console.log("搜索背景文件名：" + bgfilename);
                                 }
-                                
-                                let audiomatch = text.match(/AudioFilename: (.+)/);
+                                let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
                                 if (audiomatch) {
-                                    audiofilename = audiomatch[1];
+                                    audiofilename = audiomatch[0];
                                     console.log("搜索音频文件名：" + audiofilename);
                                 }
                             }
