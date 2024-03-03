@@ -42,7 +42,7 @@
         <a href="" target="_blank">加载中...</a>
     </div>
 
-    <script src="https://cdn.staticfile.org/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script src="js/util.js"></script>
     <script src="js/fakeaudio.js"></script>
@@ -176,35 +176,16 @@
                             );
                             osufile = text;
                             // console.log(text);
-                            let bgfilename = '';
-                            let audiofilename = '';
-                            let readingBgFilename = false;
-                            let readingAudioFilename = false;
-                            for (let i = 0; i < text.length; i++) {
-                                if (text.slice(i, i + 5) === '0,0,"') {
-                                    readingBgFilename = true;
-                                    i += 5;
-                                } else if (text.slice(i, i + 15) === 'AudioFilename: ') {
-                                    readingAudioFilename = true;
-                                    i += 15;
-                                }
-                                if (readingBgFilename) {
-                                    if (text[i] === '"') {
-                                        readingBgFilename = false;
-                                    } else {
-                                        bgfilename += text[i];
-                                    }
-                                }
-                                if (readingAudioFilename) {
-                                    if (text[i] === '\n') {
-                                        readingAudioFilename = false;
-                                    } else {
-                                        audiofilename += text[i];
-                                    }
-                                }
+                            let bgmatch = text.match(/0,0,"([^"]*)"/);
+                            if (bgmatch) {
+                                bgfilename = bgmatch[1];
+                                console.log("搜索背景文件名：" + bgfilename);
                             }
-                            console.log("搜索背景文件名：" + bgfilename);
-                            console.log("搜索音频文件名：" + audiofilename);
+                            let audiomatch = text.match(/AudioFilename: (.+)/);
+                            if (audiomatch) {
+                                audiofilename = audiomatch[1];
+                                console.log("搜索音频文件名：" + audiofilename);
+                            }
                         }
                     }
                     if (!found) {
@@ -224,35 +205,16 @@
                                 );
                                 osufile = text;
                                 // console.log(text);
-                                let bgfilename = '';
-                                let audiofilename = '';
-                                let readingBgFilename = false;
-                                let readingAudioFilename = false;
-                                for (let i = 0; i < text.length; i++) {
-                                    if (text.slice(i, i + 5) === '0,0,"') {
-                                        readingBgFilename = true;
-                                        i += 5;
-                                    } else if (text.slice(i, i + 15) === 'AudioFilename: ') {
-                                        readingAudioFilename = true;
-                                        i += 15;
-                                    }
-                                    if (readingBgFilename) {
-                                        if (text[i] === '"') {
-                                            readingBgFilename = false;
-                                        } else {
-                                            bgfilename += text[i];
-                                        }
-                                    }
-                                    if (readingAudioFilename) {
-                                        if (text[i] === '\n') {
-                                            readingAudioFilename = false;
-                                        } else {
-                                            audiofilename += text[i];
-                                        }
-                                    }
+                                let bgmatch = text.match(/0,0,"([^"]*)"/);
+                                if (bgmatch) {
+                                    bgfilename = bgmatch[1];
+                                    console.log("搜索背景文件名：" + bgfilename);
                                 }
-                                console.log("搜索背景文件名：" + bgfilename);
-                                console.log("搜索音频文件名：" + audiofilename);
+                                let audiomatch = text.match(/AudioFilename: (.+)/);
+                                if (audiomatch) {
+                                    audiofilename = audiomatch[1];
+                                    console.log("搜索音频文件名：" + audiofilename);
+                                }
                             }
                         }
                     }
