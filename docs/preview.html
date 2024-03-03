@@ -176,14 +176,16 @@
                             );
                             osufile = text;
                             // console.log(text);
-                            let bgmatch = text.split('0,0,"');
-                            if (bgmatch[1]) {
-                                bgfilename = bgmatch[1].split('"')[0];
+                            let bgStartIndex = text.indexOf('0,0,"') + 5;
+                            let bgEndIndex = text.indexOf('"', bgStartIndex);
+                            if (bgStartIndex > -1 && bgEndIndex > -1) {
+                                bgfilename = text.substring(bgStartIndex, bgEndIndex);
                                 console.log("搜索背景文件名：" + bgfilename);
                             }
-                            let audiomatch = text.split('AudioFilename: ');
-                            if (audiomatch[1]) {
-                                audiofilename = audiomatch[1].split('\n')[0];
+                            let audioStartIndex = text.indexOf('AudioFilename: ') + 15;
+                            let audioEndIndex = text.indexOf('\n', audioStartIndex);
+                            if (audioStartIndex > -1 && audioEndIndex > -1) {
+                                audiofilename = text.substring(audioStartIndex, audioEndIndex);
                                 console.log("搜索音频文件名：" + audiofilename);
                             }
                         }
@@ -205,14 +207,16 @@
                                 );
                                 osufile = text;
                                 // console.log(text);
-                                let bgmatch = text.split('0,0,"');
-                                if (bgmatch[1]) {
-                                    bgfilename = bgmatch[1].split('"')[0];
+                                let bgStartIndex = text.indexOf('0,0,"') + 5;
+                                let bgEndIndex = text.indexOf('"', bgStartIndex);
+                                if (bgStartIndex > -1 && bgEndIndex > -1) {
+                                    bgfilename = text.substring(bgStartIndex, bgEndIndex);
                                     console.log("搜索背景文件名：" + bgfilename);
                                 }
-                                let audiomatch = text.split('AudioFilename: ');
-                                if (audiomatch[1]) {
-                                    audiofilename = audiomatch[1].split('\n')[0];
+                                let audioStartIndex = text.indexOf('AudioFilename: ') + 15;
+                                let audioEndIndex = text.indexOf('\n', audioStartIndex);
+                                if (audioStartIndex > -1 && audioEndIndex > -1) {
+                                    audiofilename = text.substring(audioStartIndex, audioEndIndex);
                                     console.log("搜索音频文件名：" + audiofilename);
                                 }
                             }
