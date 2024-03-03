@@ -176,14 +176,14 @@
                             );
                             osufile = text;
                             // console.log(text);
-                            let bgmatch = text.match(/(?<=0,0,").+(?=")/);
-                            if (bgmatch) {
-                                bgfilename = bgmatch[0];
+                            let bgmatch = text.split('0,0,"');
+                            if (bgmatch[1]) {
+                                bgfilename = bgmatch[1].split('"')[0];
                                 console.log("搜索背景文件名：" + bgfilename);
                             }
-                            let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
-                            if (audiomatch) {
-                                audiofilename = audiomatch[0];
+                            let audiomatch = text.split('AudioFilename: ');
+                            if (audiomatch[1]) {
+                                audiofilename = audiomatch[1].split('\n')[0];
                                 console.log("搜索音频文件名：" + audiofilename);
                             }
                         }
@@ -205,14 +205,14 @@
                                 );
                                 osufile = text;
                                 // console.log(text);
-                                let bgmatch = text.match(/(?<=0,0,").+(?=")/);
-                                if (bgmatch) {
-                                    bgfilename = bgmatch[0];
+                                let bgmatch = text.split('0,0,"');
+                                if (bgmatch[1]) {
+                                    bgfilename = bgmatch[1].split('"')[0];
                                     console.log("搜索背景文件名：" + bgfilename);
                                 }
-                                let audiomatch = text.match(/(?<=AudioFilename: ).+(?=)/);
-                                if (audiomatch) {
-                                    audiofilename = audiomatch[0];
+                                let audiomatch = text.split('AudioFilename: ');
+                                if (audiomatch[1]) {
+                                    audiofilename = audiomatch[1].split('\n')[0];
                                     console.log("搜索音频文件名：" + audiofilename);
                                 }
                             }
