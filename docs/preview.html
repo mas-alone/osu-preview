@@ -176,11 +176,13 @@
                             );
                             osufile = text;
                             // console.log(text);
+                            
                             let bgmatch = text.match(/0,0,"([^"]*)"/);
                             if (bgmatch) {
                                 bgfilename = bgmatch[1];
                                 console.log("搜索背景文件名：" + bgfilename);
                             }
+                            
                             let audiomatch = text.match(/AudioFilename: (.+)/);
                             if (audiomatch) {
                                 audiofilename = audiomatch[1];
@@ -205,11 +207,13 @@
                                 );
                                 osufile = text;
                                 // console.log(text);
+                                
                                 let bgmatch = text.match(/0,0,"([^"]*)"/);
                                 if (bgmatch) {
                                     bgfilename = bgmatch[1];
                                     console.log("搜索背景文件名：" + bgfilename);
                                 }
+                                
                                 let audiomatch = text.match(/AudioFilename: (.+)/);
                                 if (audiomatch) {
                                     audiofilename = audiomatch[1];
