@@ -39,7 +39,7 @@
     </div>
     <div id="title">
         <img src="./icon.svg" width="20" height="30" alt="基于血猫">
-        <a href="" target="_blank">...</a>
+        <a href="" target="_blank">加载中...</a>
     </div>
 
     <script src="https://cdn.staticfile.org/jquery/3.6.4/jquery.min.js"></script>
@@ -175,9 +175,21 @@
                                 new zip.TextWriter()
                             );
                             function handleError(errorMsg) {
-                              console.error("发生错误：" + errorMsg);
-                              let linkElement = document.querySelector("#title a");
-                              linkElement.innerText = "发生错误：" + errorMsg;
+                              let topElement = document.documentElement;
+                              
+                              let errorDiv = document.createElement("div");
+                              errorDiv.innerText = "发生错误：" + errorMsg;
+                              errorDiv.style.position = "fixed";
+                              errorDiv.style.top = "0";
+                              errorDiv.style.left = "0";
+                              errorDiv.style.width = "100%";
+                              errorDiv.style.backgroundColor = "red";
+                              errorDiv.style.color = "white";
+                              errorDiv.style.padding = "10px";
+                              errorDiv.style.textAlign = "center";
+                              errorDiv.style.zIndex = "9999";
+                              
+                              topElement.appendChild(errorDiv);
                             }
                             
                             window.onerror = function (errorMsg, url, lineNumber, columnNumber, errorObj) {
@@ -197,6 +209,7 @@
                                 console.log("搜索音频文件名：" + audiofilename);
                               }
                             } catch (error) {
+                              console.error(error);
                               handleError(error);
                             }
                         }
@@ -217,9 +230,21 @@
                                     new zip.TextWriter()
                                 );
                                 function handleError(errorMsg) {
-                                  console.error("发生错误：" + errorMsg);
-                                  let linkElement = document.querySelector("#title a");
-                                  linkElement.innerText = "发生错误：" + errorMsg;
+                                  let topElement = document.documentElement;
+                                  
+                                  let errorDiv = document.createElement("div");
+                                  errorDiv.innerText = "发生错误：" + errorMsg;
+                                  errorDiv.style.position = "fixed";
+                                  errorDiv.style.top = "0";
+                                  errorDiv.style.left = "0";
+                                  errorDiv.style.width = "100%";
+                                  errorDiv.style.backgroundColor = "red";
+                                  errorDiv.style.color = "white";
+                                  errorDiv.style.padding = "10px";
+                                  errorDiv.style.textAlign = "center";
+                                  errorDiv.style.zIndex = "9999";
+                                  
+                                  topElement.appendChild(errorDiv);
                                 }
                                 
                                 window.onerror = function (errorMsg, url, lineNumber, columnNumber, errorObj) {
@@ -239,6 +264,7 @@
                                     console.log("搜索音频文件名：" + audiofilename);
                                   }
                                 } catch (error) {
+                                  console.error(error);
                                   handleError(error);
                                 }
                             }
