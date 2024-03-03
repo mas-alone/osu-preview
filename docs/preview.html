@@ -175,16 +175,22 @@
                                 new zip.TextWriter()
                             );
                             osufile = text;
-                            // console.log(text);
-                            let bgmatch = text.match(/0,0,"([^"]*)"/);
-                            if (bgmatch) {
+                            try {
+                              let bgmatch = text.match(/0,0,"([^"]*)"/);
+                              if (bgmatch) {
                                 bgfilename = bgmatch[1];
                                 console.log("搜索背景文件名：" + bgfilename);
-                            }
-                            let audiomatch = text.match(/AudioFilename: (.+)/);
-                            if (audiomatch) {
+                              }
+                              let audiomatch = text.match(/AudioFilename: (.+)/);
+                              if (audiomatch) {
                                 audiofilename = audiomatch[1];
                                 console.log("搜索音频文件名：" + audiofilename);
+                              }
+                            } catch (error) {
+                              console.error("发生错误：" + error);
+                              let errorDiv = document.createElement("div");
+                              errorDiv.innerText = "发生错误：" + error;
+                              document.body.appendChild(errorDiv);
                             }
                         }
                     }
@@ -204,16 +210,22 @@
                                     new zip.TextWriter()
                                 );
                                 osufile = text;
-                                // console.log(text);
-                                let bgmatch = text.match(/0,0,"([^"]*)"/);
-                                if (bgmatch) {
+                                try {
+                                  let bgmatch = text.match(/0,0,"([^"]*)"/);
+                                  if (bgmatch) {
                                     bgfilename = bgmatch[1];
                                     console.log("搜索背景文件名：" + bgfilename);
-                                }
-                                let audiomatch = text.match(/AudioFilename: (.+)/);
-                                if (audiomatch) {
+                                  }
+                                  let audiomatch = text.match(/AudioFilename: (.+)/);
+                                  if (audiomatch) {
                                     audiofilename = audiomatch[1];
                                     console.log("搜索音频文件名：" + audiofilename);
+                                  }
+                                } catch (error) {
+                                  console.error("发生错误：" + error);
+                                  let errorDiv = document.createElement("div");
+                                  errorDiv.innerText = "发生错误：" + error;
+                                  document.body.appendChild(errorDiv);
                                 }
                             }
                         }
