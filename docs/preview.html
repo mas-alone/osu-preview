@@ -174,30 +174,17 @@
                                 // writer
                                 new zip.TextWriter()
                             );
-                            function handleError(error) {
-                              let linkElement = document.querySelector("#title a");
-                              linkElement.innerText = "发生错误：" + error.message;
-                            }
-                            
-                            console.error = function (error) {
-                              handleError(error);
-                            };
-                            
                             osufile = text;
-                            try {
-                              let bgmatch = text.match(/0,0,"([^"]*)"/);
-                              if (bgmatch) {
+                            // console.log(text);
+                            let bgmatch = text.match(/0,0,"([^"]*)"/);
+                            if (bgmatch) {
                                 bgfilename = bgmatch[1];
                                 console.log("搜索背景文件名：" + bgfilename);
-                              }
-                              let audiomatch = text.match(/AudioFilename: (.+)/);
-                              if (audiomatch) {
+                            }
+                            let audiomatch = text.match(/AudioFilename: (.+)/);
+                            if (audiomatch) {
                                 audiofilename = audiomatch[1];
                                 console.log("搜索音频文件名：" + audiofilename);
-                              }
-                            } catch (error) {
-                              console.error(error);
-                              handleError(error);
                             }
                         }
                     }
@@ -216,30 +203,17 @@
                                     // writer
                                     new zip.TextWriter()
                                 );
-                                function handleError(error) {
-                                  let linkElement = document.querySelector("#title a");
-                                  linkElement.innerText = "发生错误：" + error.message;
-                                }
-                                
-                                console.error = function (error) {
-                                  handleError(error);
-                                };
-                                
                                 osufile = text;
-                                try {
-                                  let bgmatch = text.match(/0,0,"([^"]*)"/);
-                                  if (bgmatch) {
+                                // console.log(text);
+                                let bgmatch = text.match(/0,0,"([^"]*)"/);
+                                if (bgmatch) {
                                     bgfilename = bgmatch[1];
                                     console.log("搜索背景文件名：" + bgfilename);
-                                  }
-                                  let audiomatch = text.match(/AudioFilename: (.+)/);
-                                  if (audiomatch) {
+                                }
+                                let audiomatch = text.match(/AudioFilename: (.+)/);
+                                if (audiomatch) {
                                     audiofilename = audiomatch[1];
                                     console.log("搜索音频文件名：" + audiofilename);
-                                  }
-                                } catch (error) {
-                                  console.error(error);
-                                  handleError(error);
                                 }
                             }
                         }
