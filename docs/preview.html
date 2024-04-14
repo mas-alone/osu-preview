@@ -443,6 +443,17 @@
         iniDefaultColor();
         iniColorChange();
 
+		$(document).ready(function() {
+			let bgChange = window.localStorage.getItem("BGChange");
+			let $btnBGChange = $("#btnBGChange");
+			if (bgChange === "1") {
+				$btnBGChange.val("1");
+				$btnBGChange.text("屏蔽背景图片");
+			} else {
+				$btnBGChange.val("0");
+				$btnBGChange.text("显示背景图片");
+			}
+
         $("#btnDefaultColor").on('click', function () {
             let $this = $("#btnDefaultColor");
             var val = $this.val() || "0";
@@ -472,16 +483,6 @@
                 window.localStorage.setItem("ColorChange", 1);
             }
         });
-		$(document).ready(function() {
-			let bgChange = window.localStorage.getItem("BGChange");
-			let $btnBGChange = $("#btnBGChange");
-			if (bgChange === "1") {
-				$btnBGChange.val("1");
-				$btnBGChange.text("屏蔽背景图片");
-			} else {
-				$btnBGChange.val("0");
-				$btnBGChange.text("显示背景图片");
-			}
 
 			$btnBGChange.on('click', function () {
 				let $this = $(this);
