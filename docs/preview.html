@@ -473,7 +473,6 @@
             }
         });
 		$(document).ready(function() {
-			// 在页面加载时，初始化按钮状态
 			let bgChange = window.localStorage.getItem("BGChange");
 			let $btnBGChange = $("#btnBGChange");
 			if (bgChange === "1") {
@@ -484,7 +483,6 @@
 				$btnBGChange.text("显示背景图片");
 			}
 
-			// 当按钮被点击时，改变按钮状态并保存到localStorage
 			$btnBGChange.on('click', function () {
 				let $this = $(this);
 				var val = $this.val() || "0";
