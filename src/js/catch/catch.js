@@ -190,6 +190,8 @@ Catch.prototype.draw = function (time, ctx) {
     }
 };
 Catch.prototype.processBG = function (ctx) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     // line
     ctx.beginPath();
     ctx.moveTo(0, Beatmap.HEIGHT - this.CATCHER_HEIGHT);
