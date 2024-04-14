@@ -1,1 +1,177 @@
-function Standard(t){Beatmap.call(this,t);for(var t=window.localStorage.getItem("DefaultColor"),t=(this.useDefaultColor=t?parseInt(t):0,window.localStorage.getItem("ColorChange")),i=(this.colorChange=t?parseInt(t):0,this.Colors.length&&!this.useDefaultColor?this.Colors.push(this.Colors.shift()):this.Colors=Standard.DEFAULT_COLORS,1),e=-1,s=1,r=0;r<this.HitObjects.length;r++)(a=this.HitObjects[r])instanceof Spinner?s=1:(a.newCombo||s)&&(e=(e+(i=1)+a.comboSkip)%this.Colors.length,s=0),a.combo=i++,a.color=this.colorChange?this.Colors[r%this.Colors.length]:this.Colors[e];for(r=this.HitObjects.length-1;0<r;r--){var a=this.HitObjects[r];if(!(0!=a.stack||a instanceof Spinner))for(var o=r-1;0<=o;o--){var n=this.HitObjects[o];if(!(n instanceof Spinner)){if(a.time-n.endTime>this.approachTime*this.StackLeniency)break;if(a.position.distanceTo(n.endPosition)<Standard.STACK_LENIENCE){if(n instanceof Slider){for(var c=a.stack-n.stack+1,h=o+1;h<=r;h++){var p=this.HitObjects[h];p.position.distanceTo(n.endPosition)<Standard.STACK_LENIENCE&&(p.stack-=c)}break}n.stack=a.stack+1,a=n}}}}this.circleRadius=this.circleDiameter/2,this.circleBorder=this.circleRadius/8,this.shadowBlur=this.circleRadius/15}Standard.prototype=Object.create(Beatmap.prototype,{approachTime:{get:function(){return this.ApproachRate<5?1800-120*this.ApproachRate:1200-150*(this.ApproachRate-5)}},circleDiameter:{get:function(){return 108.848-8.9646*this.CircleSize}},stackOffset:{get:function(){return this.circleDiameter/20}}}),(Standard.prototype.constructor=Standard).prototype.hitObjectTypes={},Standard.ID=0,(Beatmap.modes[Standard.ID]=Standard).DEFAULT_COLORS=["rgb(0,202,0)","rgb(18,124,255)","rgb(242,24,57)","rgb(255,292,0)"],Standard.STACK_LENIENCE=3,Standard.prototype.update=function(t){t.shadowColor="#666",t.lineCap="round",t.lineJoin="round";try{t.font=this.circleRadius+'px "Comic Sans MS", cursive, sans-serif'}catch(t){}t.textAlign="center",t.textBaseline="middle",t.translate((Beatmap.WIDTH-Beatmap.MAX_X)/2,(Beatmap.HEIGHT-Beatmap.MAX_Y)/2)},Standard.prototype.draw=function(t,i){for(void 0===this.tmp.first&&(this.tmp.first=0,this.tmp.last=-1);this.tmp.first<this.HitObjects.length;){if(t<=(e=this.HitObjects[this.tmp.first]).endTime+e.__proto__.constructor.FADE_OUT_TIME)break;this.tmp.first++}for(;this.tmp.last+1<this.HitObjects.length&&t>=this.HitObjects[this.tmp.last+1].time-this.approachTime;)this.tmp.last++;for(var e,s=this.tmp.last;s>=this.tmp.first;s--)t>(e=this.HitObjects[s]).endTime+e.__proto__.constructor.FADE_OUT_TIME||e.draw(t,i)};
+function Standard(osu)
+{
+    Beatmap.call(this, osu);
+
+    let savedDefaultColor = window.localStorage.getItem("DefaultColor");
+    this.useDefaultColor = (savedDefaultColor) ? parseInt(savedDefaultColor) : 0;
+
+    let savedColorChange = window.localStorage.getItem("ColorChange");
+    this.colorChange = (savedColorChange) ? parseInt(savedColorChange) : 0;
+
+    if (this.Colors.length && !this.useDefaultColor) {
+        this.Colors.push(this.Colors.shift());
+    }
+    else
+    {
+        this.Colors = Standard.DEFAULT_COLORS;
+    }
+
+    var combo = 1,
+        comboIndex = -1,
+        setComboIndex = 1;
+    for (var i = 0; i < this.HitObjects.length; i++)
+    {
+        var hitObject = this.HitObjects[i];
+        if (hitObject instanceof Spinner)
+        {
+            setComboIndex = 1;
+        }
+        else if (hitObject.newCombo || setComboIndex)
+        {
+            combo = 1;
+            comboIndex = ((comboIndex + 1) + hitObject.comboSkip) % this.Colors.length;
+            setComboIndex = 0;
+        }
+        hitObject.combo = combo++;
+        hitObject.color = (this.colorChange) ? this.Colors[i % this.Colors.length] : this.Colors[comboIndex];
+    }
+
+
+    // calculate stacks
+    // https://gist.github.com/peppy/1167470
+    for (var i = this.HitObjects.length - 1; i > 0; i--)
+    {
+        var hitObject = this.HitObjects[i];
+        if (hitObject.stack != 0 || hitObject instanceof Spinner)
+        {
+            continue;
+        }
+
+        for (var n = i - 1; n >= 0; n--)
+        {
+            var hitObjectN = this.HitObjects[n];
+            if (hitObjectN instanceof Spinner)
+            {
+                continue;
+            }
+
+            if (hitObject.time - hitObjectN.endTime > this.approachTime * this.StackLeniency)
+            {
+                break;
+            }
+
+            if (hitObject.position.distanceTo(hitObjectN.endPosition) < Standard.STACK_LENIENCE)
+            {
+                if (hitObjectN instanceof Slider)
+                {
+                    var offset = hitObject.stack - hitObjectN.stack + 1;
+                    for (var j = n + 1; j <= i; j++)
+                    {
+                        var hitObjectJ = this.HitObjects[j];
+                        if (hitObjectJ.position.distanceTo(hitObjectN.endPosition) < Standard.STACK_LENIENCE)
+                        {
+                            hitObjectJ.stack -= offset;
+                        }
+                    }
+                    break;
+                }
+
+                hitObjectN.stack = hitObject.stack + 1;
+                hitObject = hitObjectN;
+            }
+        }
+    }
+
+    this.circleRadius = this.circleDiameter / 2;
+    this.circleBorder = this.circleRadius / 8;
+    this.shadowBlur = this.circleRadius / 15;
+}
+Standard.prototype = Object.create(Beatmap.prototype, {
+    approachTime: {
+        get: function()
+        {
+            return this.ApproachRate < 5
+                ? 1800 - this.ApproachRate * 120
+                : 1200 - (this.ApproachRate - 5) * 150;
+        }
+    },
+    // https://github.com/itdelatrisu/opsu/commit/8892973d98e04ebaa6656fe2a23749e61a122705
+    circleDiameter: {
+        get: function()
+        {
+            return 108.848 - this.CircleSize * 8.9646;
+        }
+    },
+    stackOffset: {
+        get: function()
+        {
+            return this.circleDiameter / 20;
+        }
+    }
+});
+Standard.prototype.constructor = Standard;
+Standard.prototype.hitObjectTypes = {};
+Standard.ID = 0;
+Beatmap.modes[Standard.ID] = Standard;
+Standard.DEFAULT_COLORS = [
+    'rgb(0,202,0)',
+    'rgb(18,124,255)',
+    'rgb(242,24,57)',
+    'rgb(255,292,0)'
+];
+Standard.STACK_LENIENCE = 3;
+Standard.prototype.update = function(ctx)
+{
+    ctx.shadowColor = '#666';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    try
+    {
+        // this code will fail in Firefox(<~ 44)
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=941146
+        ctx.font = this.circleRadius + 'px "Comic Sans MS", cursive, sans-serif';
+    }
+    catch (e) {}
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.translate((Beatmap.WIDTH - Beatmap.MAX_X) / 2, (Beatmap.HEIGHT - Beatmap.MAX_Y) / 2);
+};
+Standard.prototype.draw = function(time, ctx)
+{
+    if (typeof this.tmp.first == 'undefined')
+    {
+        this.tmp.first = 0;
+        this.tmp.last = -1;
+    }
+
+    while (this.tmp.first < this.HitObjects.length)
+    {
+        var hitObject = this.HitObjects[this.tmp.first];
+        if (time <= hitObject.endTime + hitObject.__proto__.constructor.FADE_OUT_TIME)
+        {
+            break;
+        }
+        this.tmp.first++;
+    }
+    while (this.tmp.last + 1 < this.HitObjects.length &&
+        time >= this.HitObjects[this.tmp.last + 1].time - this.approachTime)
+    {
+        this.tmp.last++;
+    }
+    for (var i = this.tmp.last; i >= this.tmp.first; i--)
+    {
+        var hitObject = this.HitObjects[i];
+        if (time > hitObject.endTime + hitObject.__proto__.constructor.FADE_OUT_TIME)
+        {
+            continue;
+        }
+        hitObject.draw(time, ctx);
+    }
+Standard.prototype.processBG = function (ctx) {
+    let bgChange = window.localStorage.getItem("BGChange");
+    if (bgChange === "1") {
+        ctx.fillStyle = 'rgba(0, 0, 0, 1.0)';
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+};
+};
