@@ -138,7 +138,8 @@
 
                 const zipWriter = new zip.ZipWriter(new zip.Data64URIWriter("application/zip"));
                 //var response2 = await fetch("https://chimu.moe" + data.DownloadPath);
-                var response2 = await fetch(`https://txy1.sayobot.cn/beatmaps/download/mini/${setID}?server=auto`);
+                //var response2 = await fetch(`https://txy1.sayobot.cn/beatmaps/download/mini/${setID}?server=auto`);
+                var response2 = await fetch(`https://api.nerinyan.moe/d/${setID}`);
                 if (response2.status >= 400 && response2.status < 600) {
                     $('#title a').text("无法从sayobot下载该谱面");
                     return;
