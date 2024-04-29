@@ -13,7 +13,7 @@ HoldNote.OPACITY = 0.88;
 HoldNote.prototype.draw = function(scroll, ctx)
 {
     var sy = this.beatmap.calcY(this.position.y, scroll) - Mania.COLUMN_WIDTH / 3,
-        ey = this.beatmap.calcY(this.endPosition.y, scroll) - Mania.COLUMN_WIDTH / 3;
+        ey = this.beatmap.calcY(this.endPosition.y - 2 * Mania.COLUMN_WIDTH / 3, scroll) - Mania.COLUMN_WIDTH / 3;
 
     var w = Mania.COLUMN_WIDTH * HoldNote.WIDTH_SCALE;
     ctx.globalAlpha = HoldNote.OPACITY;
@@ -29,9 +29,10 @@ HoldNote.prototype.draw = function(scroll, ctx)
     ctx.strokeStyle = '#ccc';
     ctx.lineWidth = 1;
     ctx.stroke();
-
+    /*
     ctx.beginPath();
     ctx.rect(this.position.x, ey, Mania.COLUMN_WIDTH, Mania.COLUMN_WIDTH / 3);
     ctx.fill();
     ctx.stroke();
+    */
 };
