@@ -56,7 +56,7 @@ Mania.DEFAULT_COLORS = [
 ];
 Mania.COLUMN_START = 130;
 Mania.HIT_POSITION = 400;
-Mania.COLUMN_WIDTH = 30;
+Mania.COLUMN_WIDTH = 60;
 let savedSpeed = window.localStorage.getItem("SCROLL_SPEED");
 Mania.SCROLL_SPEED = (savedSpeed) ? parseInt(savedSpeed) : 20;
 Mania.prototype.calcY = function(y, scroll)
